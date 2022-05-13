@@ -639,8 +639,12 @@ def scrape_stage_race_overview_stages(url:str) -> pd.DataFrame:
     df=pd.DataFrame(columns=["date","stage_name","start_location","end_location","profile","distance","stage_url"])
 
     # fill data frame
+
     for list_item in stage_list_items:
-        if (list_item.text!="Rest day"): series=parse_stage_list_item(list_item) # not a rest day
+        pattern = r'[0-9]'
+        test = re.sub(pattern, '',list_item.text)
+
+        if  test!= '/Restday': series=parse_stage_list_item(list_item) # not a rest day
         else: series=pd.Series({"stage_name":"REST DAY"}) # is a rest day
         df=df.append(series,ignore_index=True)
 
