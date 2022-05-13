@@ -175,7 +175,7 @@ def scrape_tour_races_for_year(year=2020,tour_code=1) -> pd.DataFrame:
     table_body=table_div.find("tbody")
     table_rows=table_body.find_all("tr")
 
-    df=pd.DataFrame(columns=["race_dates","race_name","stage_race","race_class","race_country_code","cancelled"])
+    df=pd.DataFrame(columns=["race_dates","race_name","stage_race","race_class","race_country_code","cancelled","race_url"])
 
     for row in table_rows:
         series=parse_tour_races_for_year_row(row)
@@ -209,6 +209,7 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
     series["race_dates"]=row_details[0].text
     series["stage_race"]=("-" in row_details[0].text)
     series["race_country_code"]=row_details[2].find("span",{"class":"flag"})["class"][-1]
+    series["race_url"]="https://www.procyclingstats.com/"+row_details[2].find("a")["href"]
     series["race_name"]=row_details[2].find("a").text
     series["race_class"]=row_details[4].text
 
@@ -245,7 +246,7 @@ def scrape_teams_for_year(year=2020) -> pd.DataFrame:
     df=pd.DataFrame()
 
     # isolate areas
-    div=soup.find("div",{"class":"statDivLeft"})
+    div=soup.find("div",{"class":"mt20"})
 
     # get team classifications
     headings=div.find_all("h3")
@@ -628,11 +629,11 @@ def scrape_stage_race_overview_stages(url:str) -> pd.DataFrame:
     soup=BeautifulSoup(response.html.html,"lxml")
 
     # isolate desired list
-    left_div=soup.find("div",{"class":"w36"})
-    stage_list=left_div.find_all("ul")[1]
+    left_div=soup.find_all("div",{"class":"mt20"})[1]
+    stage_list=left_div.find_all("ul")
 
     # get list items
-    stage_list_items=stage_list.find_all("li")
+    stage_list_items=left_div.find_all("li")
 
     # prepare data frame
     df=pd.DataFrame(columns=["date","stage_name","start_location","end_location","profile","distance","stage_url"])
@@ -673,17 +674,19 @@ def parse_stage_list_item(list_item) -> pd.Series:
     series["stage_url"]="https://www.procyclingstats.com/"+stage_details["href"]
 
     # locations & name
-    stage_detail_divs=stage_details.find_all("div")
-    series["stage_name"]=stage_detail_divs[0].text
-    locations=stage_detail_divs[2].text.split("›")
-    series["start_location"]=locations[0].strip()
-    series["end_location"]=locations[1].strip()
+    stage_detail_divs=list_item.find_all("div")
+    #series["stage_name"]=stage_detail_divs[0].text
+    locations=stage_detail_divs[2].text.split("|")
+    series["stage_name"]=locations[0]
+    series["start_location"]=locations[1].split("-")[0].strip()
+    series["end_location"]=locations[1].split("-")[1].strip()
 
     # profile
-    series["profile"]=stage_details.find("div",{"class":"profile"})["class"][-2]
+
+    series["profile"]=stage_detail_divs[1].contents[0].attrs['class'][2]
 
     # length of stage
-    series["distance"]=float(stage_details.find("span").text.replace("(","").replace("km)",""))
+    series["distance"]=float(stage_detail_divs[4].text.strip("()k"))
 
     return pd.Series(series)
 
