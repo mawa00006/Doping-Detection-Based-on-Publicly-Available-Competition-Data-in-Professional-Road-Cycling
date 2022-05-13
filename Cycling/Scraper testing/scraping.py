@@ -136,6 +136,10 @@ def get_available_tours_for_year(year=2020) -> {str:int}:
 
     # fill dict
     for option in select_field_options:
+
+        if len(option["value"]) == 0:
+            continue
+        c1 = option.text
         tours[option.text]=int(option["value"])
 
     return tours
@@ -167,11 +171,11 @@ def scrape_tour_races_for_year(year=2020,tour_code=1) -> pd.DataFrame:
     response.html.render()
     soup=BeautifulSoup(response.html.html,"lxml")
 
-    table_div=soup.find("div",{"class":"tableCont"})
+    table_div=soup.find("table",{"class":"basic"})
     table_body=table_div.find("tbody")
     table_rows=table_body.find_all("tr")
 
-    df=pd.DataFrame(columns=["race_dates","race_name","stage_race","race_class","race_country_code","cancelled","race_url"])
+    df=pd.DataFrame(columns=["race_dates","race_name","stage_race","race_class","race_country_code","cancelled"])
 
     for row in table_rows:
         series=parse_tour_races_for_year_row(row)
@@ -201,13 +205,12 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
     row_details=row.find_all("td")
 
     # extract details
-    series["cancelled"]=("striked" in row["class"])
+    #series["cancelled"]=("striked" in row["class"])
     series["race_dates"]=row_details[0].text
     series["stage_race"]=("-" in row_details[0].text)
-    series["race_country_code"]=row_details[1].find("span",{"class":"flag"})["class"][-1]
-    series["race_url"]="https://www.procyclingstats.com/"+row_details[1].find("a")["href"]
-    series["race_name"]=row_details[1].find("a").text
-    series["race_class"]=row_details[3].text
+    series["race_country_code"]=row_details[2].find("span",{"class":"flag"})["class"][-1]
+    series["race_name"]=row_details[2].find("a").text
+    series["race_class"]=row_details[4].text
 
     return pd.Series(series)
 

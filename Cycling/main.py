@@ -1,6 +1,6 @@
 from scraping import scrape_rider_all_results
 import pandas as pd
-import numpy
+
 
 #Wikipedia: 2013, 2014
 
