@@ -756,7 +756,7 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
     rows=results_table.find_all("tr")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["stage_pos","gc_pos","gc_time_diff_after","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points","finish_time"])
+    df=pd.DataFrame(columns=["stage_pos","gc_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
     # fill data frame
     for row in rows:
@@ -776,7 +776,7 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     pandas.Series: fetched data includes
                         "stage_pos" (int) finish position of rider (`np.NaN` if rider didn't finish stage)
                         "gc_pos" (int) rider's gc position after stage (`np.NaN` if rider didn't finish stage)
-                        "gc_time_diff_after" (datetime.timedelta) rider's time difference to gc leader after stage
+                        #"gc_time_diff_after" (datetime.timedelta) rider's time difference to gc leader after stage
                         "bib_number" (int) rider's race number
                         "rider_age" (int) rider's age on day of stage
                         "team_name" (str) name of rider's team
@@ -784,7 +784,7 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
                         "rider_nationality_code" (str) PCS code for rider's nationality
                         "uci_points" (int) number of uci points won by rider in stage
                         "points" (int) number of PCS points won by rider in stage
-                        "finish_time" (datetime.timedelta) time taken to complete stage (or time behind stage winner)
+                        #"finish_time" (datetime.timedelta) time taken to complete stage (or time behind stage winner)
     """
     series={}
     row_data=row.find_all("td")
@@ -795,24 +795,24 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     gc_time_diff_after=row_data[2].text.replace("+","")
     series["stage_pos"]=int(stage_pos) if (stage_pos not in ["DNF","OTL","DNS","DF"]) else np.NaN
     series["gc_pos"]=int(gc_pos) if (gc_pos!="") else np.NaN
-    series["gc_time_diff_after"]=parse_finish_time(gc_time_diff_after) if ("-" not in gc_time_diff_after) else np.NaN
+    #series["gc_time_diff_after"]=parse_finish_time(gc_time_diff_after) if ("-" not in gc_time_diff_after) else np.NaN
     series["bib_number"]=int(row_data[3].text)
 
     # rider and team details
-    series["rider_age"]=int(row_data[5].text)
-    series["team_name"]=row_data[6].text
-    series["rider_name"]=row_data[4].text.replace(series["team_name"],"")
-    series["rider_nationality_code"]=row_data[4].find("span",{"class":"flag"})["class"][-1]
+    series["rider_age"]=int(row_data[6].text)
+    series["team_name"]=row_data[7].text
+    series["rider_name"]=row_data[5].find('a').attrs['href'].split('/')[1]
+    series["rider_nationality_code"]=row_data[5].find("span",{"class":"flag"})["class"][-1]
 
     # point results
-    uci_points=row_data[7].text
-    points=row_data[8].text
+    uci_points=row_data[8].text
+    points=row_data[9].text
     series["uci_points"]=int(uci_points) if (uci_points!="") else 0
     series["points"]=int(points) if (points!="") else 0
 
     # results
-    finish_time=row_data[9].find("span",{"class":"timeff"}).text
-    series["finish_time"]=parse_finish_time(finish_time) if (finish_time!="-") else np.NaN
+    #finish_time=row_data[11].text
+    #series["finish_time"]=parse_finish_time(finish_time) if (finish_time!=",,0:00") else np.NaN
 
     return pd.Series(series)
 
