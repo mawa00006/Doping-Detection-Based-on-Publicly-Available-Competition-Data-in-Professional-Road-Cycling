@@ -98,13 +98,16 @@ def scrape_races_for_year(year=2020) -> pd.DataFrame:
 
     # prepare data frame
     df=pd.DataFrame()
-
+    i = 0
     for key,value in years.items():
         print("{}             ".format(key),end="\r")
         year_race_series=scrape_tour_races_for_year(year=year,tour_code=value)
         year_race_series["tour"]=key
         year_race_series["tour_code"]=value
         df=pd.concat([df,year_race_series],ignore_index=True)
+        i+= 1
+        if i == 2:
+            break
 
     return df
 
@@ -698,7 +701,7 @@ def parse_stage_list_item(list_item) -> pd.Series:
 STAGE RACING STAGES
 """
 
-def scrape_stage_race_all_stage_results(url:str) -> [pd.DataFrame]:
+def scrape_stage_race_all_stage_results(url:str, collecting = 0) -> [pd.DataFrame]:
     """
     SUMMARY
     get finishing results for each stage in a stage race.
@@ -712,12 +715,15 @@ def scrape_stage_race_all_stage_results(url:str) -> [pd.DataFrame]:
     stages=scrape_stage_race_overview_stages(url)
 
     results=[]
+
     for stage_url in stages[stages["stage_name"]!="REST DAY"]["stage_url"]:
         if stage_url[:4]!="http": stage_url="https://"+stage_url
         print(stage_url)
         stage_results_df=scrape_stage_race_stage_results(stage_url)
-        results.append(stage_results_df)
 
+        results.append(stage_results_df)
+    if collecting:
+        return results, stages
     return results
 
 def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
@@ -796,10 +802,10 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     series["stage_pos"]=int(stage_pos) if (stage_pos not in ["DNF","OTL","DNS","DF"]) else np.NaN
     series["gc_pos"]=int(gc_pos) if (gc_pos!="") else np.NaN
     #series["gc_time_diff_after"]=parse_finish_time(gc_time_diff_after) if ("-" not in gc_time_diff_after) else np.NaN
-    series["bib_number"]=int(row_data[3].text)
+    series["bib_number"]=row_data[3].text
 
     # rider and team details
-    series["rider_age"]=int(row_data[6].text)
+    series["rider_age"]=row_data[6].text
     series["team_name"]=row_data[7].text
     series["rider_name"]=row_data[5].find('a').attrs['href'].split('/')[1]
     series["rider_nationality_code"]=row_data[5].find("span",{"class":"flag"})["class"][-1]
