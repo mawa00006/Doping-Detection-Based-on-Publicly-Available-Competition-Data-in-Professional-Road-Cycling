@@ -753,7 +753,7 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
     response=session.get(url)
     response.html.render()
     soup=BeautifulSoup(response.html.html,"lxml")
-
+    infos = soup.find('w30 right mg_rp10')
     # isolate desired table
     table=soup.find("table")
     if (table is None): return None # results don't exist
