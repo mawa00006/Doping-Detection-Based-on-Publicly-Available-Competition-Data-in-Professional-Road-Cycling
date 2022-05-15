@@ -5,6 +5,7 @@ from datetime import timedelta
 import pandas as pd
 import numpy as np
 import re
+from datetime import datetime
 
 # credits:
 """
@@ -497,34 +498,16 @@ def scrape_race_information(url:str) -> pd.Series:
     soup=BeautifulSoup(response.html.html,"lxml")
 
     # isolate data location
-    information_div=soup.find("div",{"class":"res-right"})
+    information_div=soup.find("ul",{"class":"infolist"})
     text=information_div.text
 
-    series["date"]=re.search("Date:\s+([0-9]+[a-z]{2} [a-z]+ [0-9]{4})",text,re.IGNORECASE).group(1)
-    series["race_cat"]=re.search("Race category: (.*)Parcours",text,re.IGNORECASE).group(1)
-    if (series["race_cat"].strip()==""): series["race_cat"]=None
+    series["date"]=datetime.strptime(re.search("Date:\s[0-9]{2}\s\w{3,9}?\s[0-9]{4}",text,re.IGNORECASE).group()[6:], '%d %B %Y').date()
+    series["profile_score"]=int(re.search("ProfileScore:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    series["vertical_meters"]=int(re.search("Vert. meters:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    series["startlist_quality_score"] = int(re.search("Startlist quality score:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
 
-    series["parcours_rating"]=int(re.search("Parcours type:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
-    if (series["parcours_rating"]==0): series["parcours_rating"]=None
 
-    # extract location data if it exists
-    try:
-        series["start_location"]=re.search("finish: (.*) ›",text,re.IGNORECASE).group(1)
-        series["end_location"]=re.search("› (.*)Climbs",text,re.IGNORECASE).group(1)
-    except:
-        series["start_location"]=None
-        series["end_location"]=None
-
-    points_scale=re.search("scale: (.*) Start/",text,re.IGNORECASE)
-    if points_scale is None: points_scale=re.search("scale: (.*) ",text,re.IGNORECASE)
-
-    if points_scale is not None: series["pcs_points_scale"]=points_scale.group(1)
-    else: series["pcs_points_scale"]=None
-
-    series["profile"]=information_div.find("span",{"class":"profile"})["class"][-1]
-    if (series["profile"]=="p0"): series["profile"]=None # data missing
-
-    return pd.Series(series)
+    return pd.DataFrame(series, index = [0])
 
 """
 STAGE RACING OVERVIEW

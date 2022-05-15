@@ -22,6 +22,8 @@ import time
 def main():
     start_time = time.time()
 
+    race_inf = scrape_race_information('https://www.procyclingstats.com/race/tour-de-france/2020/stage-8')
+
     # prepare dataframe
     df = pd.DataFrame(columns=['date', 'stage_name', 'start_location', 'end_location',
                                'profile', 'distance', 'stage_url', 'stage_pos', 'gc_pos',
