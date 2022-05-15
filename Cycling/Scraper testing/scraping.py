@@ -209,7 +209,10 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
     row_details=row.find_all("td")
 
     # extract details
-    #series["cancelled"]=("striked" in row["class"])
+    try:
+        series["cancelled"]= ("striked" in row["class"])
+    except:
+        pass
     series["race_dates"]=row_details[0].text
     series["stage_race"]=("-" in row_details[0].text)
     series["race_country_code"]=row_details[2].find("span",{"class":"flag"})["class"][-1]
@@ -501,10 +504,22 @@ def scrape_race_information(url:str) -> pd.Series:
     information_div=soup.find("ul",{"class":"infolist"})
     text=information_div.text
 
-    series["date"]=datetime.strptime(re.search("Date:\s[0-9]{2}\s\w{3,9}?\s[0-9]{4}",text,re.IGNORECASE).group()[6:], '%d %B %Y').date()
-    series["profile_score"]=int(re.search("ProfileScore:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
-    series["vertical_meters"]=int(re.search("Vert. meters:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
-    series["startlist_quality_score"] = int(re.search("Startlist quality score:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    try:
+        series["date"] = datetime.strptime(re.search("Date:\s[0-9]{2}\s\w{3,9}?\s[0-9]{4}",text,re.IGNORECASE).group()[6:], '%d %B %Y').date()
+    except:
+        series["date"] = np.NaN
+    try:
+        series["profile_score"] = int(re.search("ProfileScore:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    except:
+        series["profile_score"] = np.NaN
+    try:
+        series["vertical_meters"] = int(re.search("Vert. meters:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    except:
+        series["vertical_meters"] = np.NaN
+    try:
+        series["startlist_quality_score"] = int(re.search("Startlist quality score:\s+([0-9]+)\*?",text,re.IGNORECASE).group(1))
+    except:
+        series["startlist_quality_score"] = np.NaN
 
 
     return pd.DataFrame(series, index = [0])
@@ -622,7 +637,7 @@ def scrape_stage_race_overview_stages(url:str) -> pd.DataFrame:
     stage_list_items=left_div.find_all("li")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["date","stage_name","start_location","end_location","profile","distance","stage_url"])
+    df=pd.DataFrame(columns=["stage_name","start_location","end_location","profile","distance","stage_url"])
 
     # fill data frame
 
@@ -646,7 +661,7 @@ def parse_stage_list_item(list_item) -> pd.Series:
     OUTPUT
     type: description
     pandas.Series: fetched data includes
-                        "date" (str) date of stage (D/M)
+                        #"date" (str) date of stage (D/M)
                         "stage_name" (str) name of stage (`stage #` or `REST DAY`)
                         "start_location" (str) name of start town
                         "end_location" (str) name of finish town
@@ -657,7 +672,7 @@ def parse_stage_list_item(list_item) -> pd.Series:
     series={}
 
     # date of stage
-    series["date"]=list_item.find("div").text
+    #series["date"]=list_item.find("div").text
 
     # url
     stage_details=list_item.find("a")
@@ -843,7 +858,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     rows=results_table.find_all("tr")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["finish_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points","finish_time"])
+    df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
     # fill data frame
     for row in rows:
@@ -876,7 +891,7 @@ def parse_one_day_results_row(row) -> pd.Series:
 
     # race details
     finish_pos=row_data[0].text
-    series["finish_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS"]) else np.NaN
+    series["stage_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS"]) else np.NaN
     series["bib_number"]=int(row_data[1].text)
 
     # rider and team details
@@ -892,8 +907,8 @@ def parse_one_day_results_row(row) -> pd.Series:
     series["points"]=int(points) if (points!="") else 0
 
     # results
-    finish_time=row_data[7].find("span",{"class":"timeff"}).text
-    series["finish_time"]=parse_finish_time(finish_time) if (finish_time!="-") else np.NaN
+    #finish_time=row_data[7].find("span",{"class":"timeff"}).text
+    #series["finish_time"]=parse_finish_time(finish_time) if (finish_time!="-") else np.NaN
 
     return pd.Series(series)
 

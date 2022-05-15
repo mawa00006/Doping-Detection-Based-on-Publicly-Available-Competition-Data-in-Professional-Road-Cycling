@@ -22,10 +22,11 @@ import time
 def main():
     start_time = time.time()
 
-    race_inf = scrape_race_information('https://www.procyclingstats.com/race/tour-de-france/2020/stage-8')
+
+    stage_inf = scrape_race_information('https://www.procyclingstats.com/race/tour-de-france/2020/stage-8')
 
     # prepare dataframe
-    df = pd.DataFrame(columns=['date', 'stage_name', 'start_location', 'end_location',
+    df = pd.DataFrame(columns=['date', 'profile_score', 'vertical_meters', 'startlist_quality_score', 'stage_name', 'start_location', 'end_location',
                                'profile', 'distance', 'stage_url', 'stage_pos', 'gc_pos',
                                'bib_number', 'rider_age', 'team_name', 'rider_name',
                                'rider_nationality_code', 'uci_points', 'points', 'race_name',
@@ -44,6 +45,8 @@ def main():
             # save basic information about the race in a dataframe
             # to concat it to each performance point later
             stage_race = getattr(race, 'stage_race')
+            if not stage_race:
+                print('stop')
             race_info_df = pd.DataFrame(race).T
             race_info_df = race_info_df.drop(race_info_df.columns[[0,1, 7]], axis = 1)
             race_info_df.columns = ["race_name","stage_race","race_class","race_country_code",
@@ -54,8 +57,12 @@ def main():
             # scrape information and final result of each stage in a stage race
             if stage_race:
                 stage_results, stages  = scrape_stage_race_all_stage_results(url+'/overview', collecting =1)
+                stage_inf = scrape_race_information(url)
+
             # scrape information and final result of a one-day race
             else:
+                pass
+                stage_results = scrape_one_day_results(url)
                 pass
                     #TODO
 
@@ -65,25 +72,28 @@ def main():
                 stage_result = stage_results[i]
                 stage = stages.iloc[[i]]
                 stage_info_df = pd.DataFrame(stage)
+                stage_info_df = pd.concat([stage_inf, stage_info_df],axis = 1)
                 stage_info_df = pd.concat([stage_info_df]*stage_result.shape[0], ignore_index= True)
                 out_df = pd.concat([stage_info_df, stage_result], axis = 1)
                 race_inf  = pd.concat([race_info_df]*stage_result.shape[0], ignore_index= True)
                 out_df = pd.concat([out_df, race_inf], axis = 1)
 
                 # append data to final output
-                df = df.concat([df, out_df], axis = 0)
+                df = pd.concat([df, out_df], axis = 0)
 
-
-    df = df[['date', 'stage_name', 'start_location', 'end_location',
-                               'profile', 'distance', 'stage_url', 'stage_pos', 'gc_pos',
-                               'bib_number', 'rider_age', 'team_name', 'rider_name',
-                               'rider_nationality_code', 'uci_points', 'points', 'race_name',
-                               'stage_race', 'race_class', 'race_country_code', 'cancelled', 'tour', 'tour_code']]
+    df = pd.DataFrame(
+        columns=['race_name','date','rider_name', 'stage_pos', 'gc_pos',
+                 'rider_nationality_code', 'rider_age', 'team_name', 'distance','profile_score','profile', 'vertical_meters',
+                 'startlist_quality_score', 'stage_name', 'start_location', 'end_location',  'stage_url',
+                 'bib_number',  'uci_points', 'points', 'stage_race', 'race_class', 'race_country_code', 'cancelled',
+                 'tour', 'tour_code'])
 
     end_time = time.time()
 
 
     print('Runtime:', end_time - start_time)
+
+    df.to_csv('Test-Data/test.csv', index= True)
 
 if __name__ == "__main__":
     main()
