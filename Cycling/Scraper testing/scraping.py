@@ -7,6 +7,7 @@ import numpy as np
 import re
 from datetime import datetime
 
+
 # credits:
 """
 UTILITY
@@ -693,6 +694,13 @@ def parse_stage_list_item(list_item) -> pd.Series:
     # length of stage
     series["distance"]=float(stage_detail_divs[4].text.strip("()k"))
 
+    # Team time trial
+    if re.search("(TTT)",locations[0]):
+        series["TTT"]= True
+    else:
+        series["TTT"]= False
+
+
     return pd.Series(series)
 
 """
@@ -714,13 +722,14 @@ def scrape_stage_race_all_stage_results(url:str, collecting = 0) -> [pd.DataFram
 
     results=[]
 
-    for stage_url in stages[stages["stage_name"]!="REST DAY"]["stage_url"]:
+    for stage_url in stages[(stages["stage_name"]!="REST DAY")& (stages["TTT"]!=True)]["stage_url"]:
         if stage_url[:4]!="http": stage_url="https://"+stage_url
         print(stage_url)
         stage_results_df=scrape_stage_race_stage_results(stage_url)
 
         results.append(stage_results_df)
     if collecting:
+        stages = stages.drop(stages.columns[[6]], axis= 1)
         return results, stages
     return results
 

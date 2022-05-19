@@ -18,6 +18,8 @@ from scraping import scrape_rider_all_results
 import pandas as pd
 import time
 
+#link to wiki page for rider
+
 # racename, race year, race difficulty, rider name, age, gender, doping status, ranking, time, captain?, team, uci points, tour code, gc pos, distance, pcs_points, year
 def main():
     start_time = time.time()
@@ -62,7 +64,7 @@ def main():
             # scrape information and final result of a one-day race
             else:
                 pass
-                stage_results = scrape_one_day_results(url)
+                #stage_results = scrape_one_day_results(url)
                 pass
                     #TODO
 
@@ -81,12 +83,13 @@ def main():
                 # append data to final output
                 df = pd.concat([df, out_df], axis = 0)
 
-    df = pd.DataFrame(
-        columns=['race_name','date','rider_name', 'stage_pos', 'gc_pos',
+            break
+
+    df = df[['race_name','date','rider_name', 'stage_pos', 'gc_pos',
                  'rider_nationality_code', 'rider_age', 'team_name', 'distance','profile_score','profile', 'vertical_meters',
                  'startlist_quality_score', 'stage_name', 'start_location', 'end_location',  'stage_url',
                  'bib_number',  'uci_points', 'points', 'stage_race', 'race_class', 'race_country_code', 'cancelled',
-                 'tour', 'tour_code'])
+                 'tour', 'tour_code']]
 
     end_time = time.time()
 
