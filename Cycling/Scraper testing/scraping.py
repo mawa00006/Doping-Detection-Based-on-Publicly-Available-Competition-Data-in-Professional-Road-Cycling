@@ -722,6 +722,8 @@ def scrape_stage_race_all_stage_results(url:str, collecting = 0) -> [pd.DataFram
 
     results=[]
 
+
+    # scrape data for 'normal stages'
     for stage_url in stages[(stages["stage_name"]!="REST DAY")& (stages["TTT"]!=True)]["stage_url"]:
         if stage_url[:4]!="http": stage_url="https://"+stage_url
         print(stage_url)
@@ -769,7 +771,7 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
     rows=results_table.find_all("tr")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["stage_pos","gc_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
+    df=pd.DataFrame(columns=["stage_pos","gc_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points", "striked"])
 
     # fill data frame
     for row in rows:
@@ -801,12 +803,18 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     """
     series={}
     row_data=row.find_all("td")
-
+    striked = row.find_all("s")
     # race details
     stage_pos=row_data[0].text
     gc_pos=row_data[1].text
     gc_time_diff_after=row_data[2].text.replace("+","")
-    series["stage_pos"]=int(stage_pos) if (stage_pos not in ["DNF","OTL","DNS","DF"]) else np.NaN
+    #<s> </s>
+
+    try:
+        series["stage_pos"]=int(stage_pos) if (stage_pos not in ["DNF","OTL","DNS","DF", "DSQ"]) else np.NaN
+    except:
+        print('stop')
+
     series["gc_pos"]=int(gc_pos) if (gc_pos!="") else np.NaN
     #series["gc_time_diff_after"]=parse_finish_time(gc_time_diff_after) if ("-" not in gc_time_diff_after) else np.NaN
     series["bib_number"]=row_data[3].text
@@ -822,7 +830,10 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     points=row_data[9].text
     series["uci_points"]=int(uci_points) if (uci_points!="") else 0
     series["points"]=int(points) if (points!="") else 0
-
+    if len(striked) != 0:
+        series["striked"]= 1
+    else:
+        series["striked"]= 0
     # results
     #finish_time=row_data[11].text
     #series["finish_time"]=parse_finish_time(finish_time) if (finish_time!=",,0:00") else np.NaN
