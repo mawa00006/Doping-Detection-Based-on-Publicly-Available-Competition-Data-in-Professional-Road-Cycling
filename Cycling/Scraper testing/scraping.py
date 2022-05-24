@@ -955,8 +955,23 @@ def scrape_one_day_race_information(url:str):
                     "startlist_quality-score" (int) quality of startlist
 
     """
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
 
+    #series to fill in
+    series = pd.Series()
 
+    #isolate desired table
+    div = soup.find("div",{"class":"main"})
+    halt = 1
+    series["race_name"] = div.find("h1").text
+    series["race_class"] = div.find_all("font")[1].text
+    series["race_country_code"] = div.find("span",{"class":"flag"})["class"][1]
+
+    halt = 1
 """
 RIDER PROFILES
 """
