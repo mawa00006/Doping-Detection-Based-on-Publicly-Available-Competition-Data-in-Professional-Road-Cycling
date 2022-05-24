@@ -28,6 +28,8 @@ def main():
 
     df_stages, df_oneday, df_TTT, df_ITT = prepare_dataframes()
 
+    stage_results = scrape_one_day_results('https://www.procyclingstats.com/race/milano-sanremo/2014')
+
 
     # all years from which to scrape available race data
     years = [2014]
@@ -56,7 +58,7 @@ def main():
             # scrape information and final result of a one-day race
             else:
                 pass
-                #stage_results = scrape_one_day_results(url)
+                stage_results = scrape_one_day_results(url)
                 pass
                     #TODO
 

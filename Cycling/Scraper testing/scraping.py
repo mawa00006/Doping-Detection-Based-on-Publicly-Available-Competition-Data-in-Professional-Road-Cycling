@@ -107,9 +107,9 @@ def scrape_races_for_year(year=2020) -> pd.DataFrame:
         year_race_series["tour"]=key
         year_race_series["tour_code"]=value
         df=pd.concat([df,year_race_series],ignore_index=True)
-        i+= 1
-        if i == 2:
-            break
+        #i+= 1
+        #if i == 2:
+        #    break
 
     return df
 
@@ -616,7 +616,6 @@ def scrape_stage_race_overview_stages(url:str) -> pd.DataFrame:
     OUTPUT
     type: description
     pandas.DataFrame: fetched data includes
-                        "date" (str) date of stage (D/M)
                         "stage_name" (str) name of stage (`stage #` or `REST DAY`)
                         "start_location" (str) name of start town
                         "end_location" (str) name of finish town
@@ -662,7 +661,6 @@ def parse_stage_list_item(list_item) -> pd.Series:
     OUTPUT
     type: description
     pandas.Series: fetched data includes
-                        #"date" (str) date of stage (D/M)
                         "stage_name" (str) name of stage (`stage #` or `REST DAY`)
                         "start_location" (str) name of start town
                         "end_location" (str) name of finish town
@@ -672,8 +670,6 @@ def parse_stage_list_item(list_item) -> pd.Series:
     """
     series={}
 
-    # date of stage
-    #series["date"]=list_item.find("div").text
 
     # url
     stage_details=list_item.find("a")
@@ -681,7 +677,6 @@ def parse_stage_list_item(list_item) -> pd.Series:
 
     # locations & name
     stage_detail_divs=list_item.find_all("div")
-    #series["stage_name"]=stage_detail_divs[0].text
     locations=stage_detail_divs[2].text.split("|")
     series["stage_name"]=locations[0]
     series["start_location"]=locations[1].split("-")[0].strip()
@@ -854,6 +849,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     OUTPUT
     type: description
     pandas.DataFrame: fetched data includes
+                        "striked" (boolean) true if performance was striked out
                         "finish_pos" (int) finish position of rider (`np.NaN` if rider didn't finish stage)
                         "bib_number" (int) rider's race number
                         "rider_age" (int) rider's age on day of stage
@@ -880,6 +876,9 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     # prepare data frame
     df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
+    # get race information
+    race_inf = scrape_race_information(url)
+    overview = scrape_stage_race_overview_stages(url)
     # fill data frame
     for row in rows:
         series=parse_one_day_results_row(row)
@@ -931,6 +930,32 @@ def parse_one_day_results_row(row) -> pd.Series:
     #series["finish_time"]=parse_finish_time(finish_time) if (finish_time!="-") else np.NaN
 
     return pd.Series(series)
+
+def scrape_one_day_race_information(url:str):
+    """
+    SUMMARY
+    scrape race information from a one day race url
+    E.G. https://www.procyclingstats.com/race/milano-sanremo/2014
+    PARAMETERS:
+    url (str): url for a one day race
+    OUTPUT
+    pandas.Dataframe: fetched data includes
+                    "date" () date of the race
+                    "race_name" (str) name of race
+                    "race_class" (str) classification of race
+                    "race_country_code" (str) code for host country
+                    "race_cat" (str) race classification
+                    "parcours_rating" (int) PCS rating for pacour difficulty
+                    "start_location" (str) name of start town
+                    "end_location" (str) name of finish town
+                    "pcs_points_scale" (str) name of points scale being used
+                    "profile" (str) code for profile of race
+                    "distance" (int) distance of stage in km
+                    "vertical_meters" (int) vertically climbed distance of stage in km
+                    "startlist_quality-score" (int) quality of startlist
+
+    """
+
 
 """
 RIDER PROFILES
