@@ -33,37 +33,30 @@ def main():
 
             # save basic information about the race in a dataframe
             # to concat it to each performance point later
-            stage_race = getattr(race, 'stage_race')
 
-            race_info_df = pd.DataFrame(race).T
-            #race_info_df = race_info_df.drop(race_info_df.columns[[0,1, 7]], axis = 1)
-            #race_info_df.columns = ["race_name","stage_race","race_class","race_country_code",
-            #                        "cancelled","tour", 'tour_code']
+            race_info_df = pd.DataFrame(race, index=[['index','stage_race', 'race_url', 'tour', 'tour_code']]).T
+            race_info_df.drop(race_info_df.columns[[0,2]], axis= 1, inplace= True)
+
 
             # get race page url
             url = getattr(race, 'race_url')
+
+
+            stage_race = getattr(race, 'stage_race')
+
             # scrape information and final result of each stage in a stage race
             if stage_race:
-                stage_results, stages = scrape_stage_race_all_stage_results(url+'/overview')
+                stage_results = scrape_stage_race_all_stage_results(url+'/overview')
 
-                # add race/stage information to each performance point
+                # add race to each performance point
                 for i in range(len(stage_results)):
 
                     stage_result = stage_results[i]
-                    stage = stages.iloc[[i]]
-                    stage_info_df = pd.DataFrame(stage)
-                    url = stage_info_df['stage_url'].loc[stage_info_df.index[0]]
-                    if pd.isna(url):
-                        continue
-                    else:
-                        stage_inf = scrape_race_information(url)
-                    stage_info_df = pd.concat([stage_inf, stage_info_df.reset_index()], axis=1)
-                    stage_info_df = pd.concat([stage_info_df] * stage_result.shape[0], ignore_index=True)
-                    out_df = pd.concat([stage_info_df, stage_result], axis=1)
-                    race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
-                    out_df = pd.concat([out_df, race_inf], axis=1)
 
-                    # append data to final output
+                    race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
+                    out_df = pd.concat([stage_result, race_inf], axis=1)
+
+                    # append stage data to final output
                     df_stages = pd.concat([df_stages, out_df], axis=0)
 
             # scrape information and final result of a one-day race
@@ -94,10 +87,10 @@ def prepare_dataframes():
     df_stages = pd.DataFrame(
         columns=['date', 'profile_score', 'vertical_meters', 'startlist_quality_score', 'stage_name', 'start_location',
                  'end_location',
-                 'profile', 'distance', 'stage_url', 'stage_pos', 'gc_pos',
-                 'bib_number', 'rider_age', 'team_name', 'rider_name',
+                 'profile', 'distance', 'stage_pos', 'gc_pos',
+                 'rider_age', 'team_name', 'rider_name',
                  'rider_nationality_code', 'uci_points', 'points', 'striked', 'race_name',
-                 'stage_race', 'race_class', 'race_country_code', 'cancelled', 'tour', 'tour_code'])
+                 'stage_race', 'race_class', 'race_country_code'])
 
     # prepare dataframe for one day races
     df_oneday = pd.DataFrame(columns=[['stage_pos' 'bib_number' 'rider_age' 'team_name' 'rider_name', 'rider_nationality_code' 'uci_points' 'points' 'date' 'race_name', 'race_class' 'race_ranking' 'race_country_code' 'start_location', 'end_location' 'pcs_points_scale' 'profile' 'distance' 'vertical_meters', 'startlist_quality_score' 'striked']])

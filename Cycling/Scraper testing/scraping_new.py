@@ -142,7 +142,7 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
     return pd.Series(series)
 
 
-def scrape_one_day_race_information(url:str):
+def scrape_race_information(url:str):
     """
     SUMMARY
     scrape race information from a one day race url
@@ -296,7 +296,7 @@ def scrape_stage_race_all_stage_results(url:str) -> [pd.DataFrame]:
         if stage_url[:4]!="http": stage_url="https://"+stage_url
         print(stage_url)
         stage_results_df=scrape_stage_race_stage_results(stage_url)
-        info_df = pd.DataFrame(scrape_one_day_race_information(stage_url)).T
+        info_df = pd.DataFrame(scrape_race_information(stage_url)).T
         info_df.insert(0, "stage_name", stage[1])
         info_df = pd.concat([info_df]*stage_results_df.shape[0], ignore_index= True)
         stage_results_df = pd.concat([stage_results_df, info_df], axis= 1)
@@ -443,7 +443,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
     # get race information
-    race_inf = scrape_one_day_race_information(url)
+    race_inf = scrape_race_information(url)
 
     # fill data frame
     for row in rows:
