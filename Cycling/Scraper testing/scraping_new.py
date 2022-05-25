@@ -233,7 +233,10 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
 
         if  test!= '/Restday': series=parse_stage_list_item(list_item) # not a rest day
         else: series=pd.Series({"stage_name":"REST DAY"}) # is a rest day
-        df=df.append(series,ignore_index=True)
+        series= pd.DataFrame(series).T
+        df= pd.concat([df,series],ignore_index=True)
+
+
     df =df[(df["stage_name"] != "REST DAY") & (df["TTT"] != True)]
     df.drop("TTT", axis=1, inplace=True)
     return df
@@ -344,8 +347,8 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
 
     # fill data frame
     for row in rows:
-        series=parse_stage_race_stage_results_row(row)
-        df=df.append(series,ignore_index=True)
+        series=pd.DataFrame(parse_stage_race_stage_results_row(row)).T
+        df=pd.concat([df,series],ignore_index=True)
 
     return df
 
@@ -415,16 +418,14 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     OUTPUT
     type: description
     pandas.DataFrame: fetched data includes
-                        "striked" (boolean) true if performance was striked out
                         "finish_pos" (int) finish position of rider (`np.NaN` if rider didn't finish stage)
-                        "bib_number" (int) rider's race number
                         "rider_age" (int) rider's age on day of stage
                         "team_name" (str) name of rider's team
                         "rider_name" (str) name of rider
                         "rider_nationality_code" (str) PCS code for rider's nationality
                         "uci_points" (int) number of uci points won by rider in stage
                         "points" (int) number of PCS points won by rider in stage
-                        "finish_time" (datetime.timedelta) time taken to complete stage (or time behind stage winner)
+                        "striked" (boolean) true if performance was striked out
     """
     # start session
     session=HTMLSession()
@@ -440,7 +441,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     rows=results_table.find_all("tr")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
+    df=pd.DataFrame(columns=["finish_pos","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points", "striked"])
 
     # get race information
     race_inf = scrape_race_information(url)
@@ -450,6 +451,10 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
         series=parse_one_day_results_row(row)
         series = pd.DataFrame(pd.concat([race_inf, series], axis=0)).T
         df=pd.concat([df,series],axis =0,ignore_index=True)
+
+    race_inf = pd.DataFrame(scrape_race_information(url)).T
+    race_inf = pd.concat([race_inf]*df.shape[0], ignore_index= True)
+    df= pd.concat([df,race_inf], axis= 1)
 
     return df
 
@@ -463,14 +468,13 @@ def parse_one_day_results_row(row) -> pd.Series:
     OUTPUT
     pandas.Series: fetched data includes
                         "finish_pos" (int) finish position of rider (`np.NaN` if rider didn't finish stage)
-                        "bib_number" (int) rider's race number
                         "rider_age" (int) rider's age on day of stage
                         "team_name" (str) name of rider's team
                         "rider_name" (str) name of rider
                         "rider_nationality_code" (str) PCS code for rider's nationality
                         "uci_points" (int) number of uci points won by rider in stage
                         "points" (int) number of PCS points won by rider in stage
-                        "finish_time" (datetime.timedelta) time taken to complete stage (or time behind stage winner)
+                        "striked" (boolean) true if performance was striked out
     """
     series={}
     row_data=row.find_all("td")
@@ -478,7 +482,6 @@ def parse_one_day_results_row(row) -> pd.Series:
     # race details
     finish_pos=row_data[0].text
     series["stage_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS", "DSQ"]) else np.NaN
-    series["bib_number"]=int(row_data[1].text)
 
     # rider and team details
     series["team_name"]=row_data[5].text
@@ -497,7 +500,5 @@ def parse_one_day_results_row(row) -> pd.Series:
         series["striked"]= 1
     else:
         series["striked"]= 0
-
-
 
     return pd.Series(series)

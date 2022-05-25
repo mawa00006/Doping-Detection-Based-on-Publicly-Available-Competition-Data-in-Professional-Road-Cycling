@@ -1,8 +1,8 @@
 import numpy as np
 
 
-from scraping import scrape_one_day_results
-from scraping import scrape_race_information
+from scraping_new import scrape_one_day_results
+
 from scraping_new import scrape_races_for_year
 from scraping_new import scrape_stage_race_all_stage_results
 
@@ -63,7 +63,7 @@ def main():
             else:
 
                 stage_results = scrape_one_day_results(url)
-                df_oneday = df_oneday.concat([df_oneday, stage_result], axis= 0)
+                df_oneday = pd.concat([df_oneday, stage_result], axis= 0)
 
 
 
