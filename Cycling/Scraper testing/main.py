@@ -1,22 +1,11 @@
 import numpy as np
 
-from scraping import get_rider_teams
-from scraping import get_rider_years
-from scraping import get_rider_details
-from scraping import scrape_riders_from_team
+
 from scraping import scrape_one_day_results
-from scraping import scrape_race_startlist
-from scraping import scrape_stage_race_stage_results
 from scraping import scrape_race_information
-from scraping import scrape_races_for_year
-from scraping import scrape_stage_race_all_stage_results
-from scraping import scrape_stage_race_overview_competing_teams
-from scraping import scrape_stage_race_overview_stages
-from scraping import scrape_stage_race_overview_top_competitors
-from scraping import scrape_tour_races_for_year
-from scraping import scrape_teams_for_year
-from scraping import scrape_rider_all_results
-from scraping import scrape_one_day_race_information
+from scraping_new import scrape_races_for_year
+from scraping_new import scrape_stage_race_all_stage_results
+
 
 import pandas as pd
 import time
@@ -29,16 +18,16 @@ def main():
 
     df_stages, df_oneday, df_TTT, df_ITT = prepare_dataframes()
 
-    stage_results = scrape_one_day_results('https://www.procyclingstats.com/race/gp-samyn/2020/result')
+    #stage_results = scrape_one_day_results('https://www.procyclingstats.com/race/gp-samyn/2020/result')
 
 
-    # all years from which to scrape available race data
+    # all years for to scrape available race data
     years = [2022]
     for year in years:
 
         # get all professional races held in a given year
         races = scrape_races_for_year(year)
-        races= races[races["cancelled"]== False]
+
         # for each race scrape all data
         for race in races.itertuples():
 
@@ -47,15 +36,15 @@ def main():
             stage_race = getattr(race, 'stage_race')
 
             race_info_df = pd.DataFrame(race).T
-            race_info_df = race_info_df.drop(race_info_df.columns[[0,1, 7]], axis = 1)
-            race_info_df.columns = ["race_name","stage_race","race_class","race_country_code",
-                                    "cancelled","tour", 'tour_code']
+            #race_info_df = race_info_df.drop(race_info_df.columns[[0,1, 7]], axis = 1)
+            #race_info_df.columns = ["race_name","stage_race","race_class","race_country_code",
+            #                        "cancelled","tour", 'tour_code']
 
             # get race page url
             url = getattr(race, 'race_url')
             # scrape information and final result of each stage in a stage race
             if stage_race:
-                stage_results, stages = scrape_stage_race_all_stage_results(url+'/overview', collecting =1)
+                stage_results, stages = scrape_stage_race_all_stage_results(url+'/overview')
 
                 # add race/stage information to each performance point
                 for i in range(len(stage_results)):
