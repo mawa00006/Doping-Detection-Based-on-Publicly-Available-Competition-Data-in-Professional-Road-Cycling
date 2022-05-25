@@ -183,8 +183,8 @@ def scrape_tour_races_for_year(year=2020,tour_code=1) -> pd.DataFrame:
     df=pd.DataFrame(columns=["race_dates","race_name","stage_race","race_class","race_country_code","cancelled","race_url"])
 
     for row in table_rows:
-        series=parse_tour_races_for_year_row(row)
-        df=df.append(series,ignore_index=True)
+        series=pd.DataFrame(parse_tour_races_for_year_row(row)).T
+        df=pd.concat([df,series],axis=0,ignore_index=True)
 
     return df
 
@@ -213,7 +213,7 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
     try:
         series["cancelled"]= ("striked" in row["class"])
     except:
-        pass
+        series["cancelled"]= False
     series["race_dates"]=row_details[0].text
     series["stage_race"]=("-" in row_details[0].text)
     series["race_country_code"]=row_details[2].find("span",{"class":"flag"})["class"][-1]
@@ -486,7 +486,6 @@ def scrape_race_information(url:str) -> pd.Series:
     OUTPUT
     pandas.Series: fetched data includes
                     "date" (str) date race occured
-                    "race_cat" (str) race classification
                     "parcours_rating" (int) PCS rating for pacour difficulty
                     "start_location" (str) name of start town
                     "end_location" (str) name of finish town
@@ -808,7 +807,7 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     try:
         series["stage_pos"]=int(stage_pos) if (stage_pos not in ["DNF","OTL","DNS","DF", "DSQ"]) else np.NaN
     except:
-        print('stop')
+        return
 
     series["gc_pos"]=int(gc_pos) if (gc_pos!="") else np.NaN
     #series["gc_time_diff_after"]=parse_finish_time(gc_time_diff_after) if ("-" not in gc_time_diff_after) else np.NaN
@@ -877,12 +876,13 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
     # get race information
-    race_inf = scrape_race_information(url)
-    overview = scrape_stage_race_overview_stages(url)
+    race_inf = scrape_one_day_race_information(url)
+
     # fill data frame
     for row in rows:
         series=parse_one_day_results_row(row)
-        df=df.append(series,ignore_index=True)
+        series = pd.DataFrame(pd.concat([race_inf, series], axis=0)).T
+        df=pd.concat([df,series],axis =0,ignore_index=True)
 
     return df
 
@@ -907,27 +907,31 @@ def parse_one_day_results_row(row) -> pd.Series:
     """
     series={}
     row_data=row.find_all("td")
-
+    striked = row.find_all("s")
     # race details
     finish_pos=row_data[0].text
-    series["stage_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS"]) else np.NaN
+    series["stage_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS", "DSQ"]) else np.NaN
     series["bib_number"]=int(row_data[1].text)
 
     # rider and team details
-    series["team_name"]=row_data[4].text
-    series["rider_name"]=row_data[2].text.replace(series["team_name"],"")
-    series["rider_nationality_code"]=row_data[2].find("span",{"class":"flag"})["class"][-1]
-    series["rider_age"]=int(row_data[3].text)
+    series["team_name"]=row_data[5].text
+    series["rider_name"]=row_data[3].find('a').attrs['href'].split('/')[1]
+    series["rider_nationality_code"]=row_data[3].find("span",{"class":"flag"})["class"][-1]
+    series["rider_age"]=int(row_data[4].text)
 
     # point results
-    uci_points=row_data[5].text
-    points=row_data[6].text
+    uci_points=row_data[6].text
+    points=row_data[7].text
     series["uci_points"]=int(uci_points) if (uci_points!="") else 0
     series["points"]=int(points) if (points!="") else 0
 
-    # results
-    #finish_time=row_data[7].find("span",{"class":"timeff"}).text
-    #series["finish_time"]=parse_finish_time(finish_time) if (finish_time!="-") else np.NaN
+    #striked performance
+    if len(striked) != 0:
+        series["striked"]= 1
+    else:
+        series["striked"]= 0
+
+
 
     return pd.Series(series)
 
@@ -943,9 +947,8 @@ def scrape_one_day_race_information(url:str):
                     "date" () date of the race
                     "race_name" (str) name of race
                     "race_class" (str) classification of race
+                    "race_ranking" (int) ranking of race
                     "race_country_code" (str) code for host country
-                    "race_cat" (str) race classification
-                    "parcours_rating" (int) PCS rating for pacour difficulty
                     "start_location" (str) name of start town
                     "end_location" (str) name of finish town
                     "pcs_points_scale" (str) name of points scale being used
@@ -964,14 +967,27 @@ def scrape_one_day_race_information(url:str):
     #series to fill in
     series = pd.Series()
 
-    #isolate desired table
-    div = soup.find("div",{"class":"main"})
-    halt = 1
-    series["race_name"] = div.find("h1").text
-    series["race_class"] = div.find_all("font")[1].text
-    series["race_country_code"] = div.find("span",{"class":"flag"})["class"][1]
+    #isolate main info
+    main = soup.find("div",{"class":"main"})
 
-    halt = 1
+    # isolate race information table
+    infolist = soup.find("ul", {"class": "infolist"}).find_all("div")
+
+    #scrape data
+    series["date"] = datetime.strptime(infolist[1].text, '%d %B %Y').date()
+    series["race_name"] = main.find("h1").text
+    series["race_class"] = main.find_all("font")[1].text
+    series["race_ranking"] = infolist[23].text
+    series["race_country_code"] = main.find("span",{"class":"flag"})["class"][1]
+    series["start_location"] = infolist[19].text
+    series["end_location"] = infolist[21].text
+    series["pcs_points_scale"] = infolist[11].text
+    series["profile"] = infolist[13].contents[0].attrs['class'][2]
+    series["distance"] = infolist[9].text
+    series["vertical_meters"] = infolist[17].text
+    series["startlist_quality_score"] = infolist[25].text
+
+    return pd.Series(series)
 """
 RIDER PROFILES
 """
