@@ -506,7 +506,7 @@ def parse_one_day_results_row(row) -> pd.Series:
 def scrape_rider_details(url:str):
     """
     SUMMARY
-    Scrapes rider detail from riders overview page
+    Scrapes rider detail from riders page
     PARAMETERS
     url to riders overview page E.G. https://www.procyclingstats.com/rider/tadej-pogacar
     OUTPUT
@@ -538,13 +538,13 @@ def scrape_rider_details(url:str):
 
     # date of birth
     d = div.contents[1]
-    m = div.contents[3].split("")[0]
-    y = div.contents[3].split("")[0]
+    m = div.contents[3].split(" ")[1]
+    y = div.contents[3].split(" ")[2]
     series["DoB"]= "{}.{}.{}".format(d,m,y)
 
     #weight and height
-    series["weight"] = span[1].contents[1].split(" ")[0]
-    series["height"] = span[1].contents[2].split(" ")[0]
+    series["weight"] = span[1].contents[1].split(" ")[1]
+    series["height"] = span[2].contents[1].split(" ")[1]
 
     # points per speciality
     series["one_day_points"] = int(pps[0].text)
@@ -562,7 +562,60 @@ def scrape_rider_details(url:str):
 
 
 def scrape_stats_per_season(url:str):
+    """
+    SUMMARY
+    scrape stats per season table from rider overview page
+    PARAMTERES
+    urls to rider overview page E.G. https://www.procyclingstats.com/rider/tadej-pogacar/statistics/overview
+    OUTPUT
+    pd.Dataframe: fetched data includes
+                "season" (int) year
+                "points" (int) sum of points in a given season
+                "wins" (int) wins in a given season
+                "racedays" (int) racedays in a given season
+    """
 
-    return
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
 
+    # prepare df
+    sps_df = pd.DataFrame(columns=["season", "points", "wins", "racedays"])
+
+    # get table
+    table = soup.find("div", {"class":"mt10"}).find("tbody")
+    rows = table.find_all("tr")
+
+    for row in rows:
+        df = pd.DataFrame(parse_stats_per_season_row(row)).T
+        sps_df = pd.concat([sps_df,df ], axis= 0, ignore_index= True)
+
+    return sps_df
+
+def parse_stats_per_season_row(row):
+    """
+    SUMMARY
+    parse a row in Stats per season table from rider overview page
+    PARAMETERS
+    row from the the table
+    OUTPUT
+    pd.Series: parsed data includes
+                "season" (int) year
+                "points" (int) sum of points in a given season
+                "wins" (int) wins in a given season
+                "racedays" (int) racedays in a given season
+
+    """
+    series = pd.Series()
+
+    row= row.find_all("td")
+
+    series["season"] = row[0].text
+    series["points"] = row[1].text
+    series["wins"] = row[4].text
+    series["racedays"] = row[5].text
+
+    return series
 

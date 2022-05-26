@@ -18,7 +18,7 @@ def main():
 
     df_stages, df_oneday, df_TTT, df_ITT = prepare_dataframes()
 
-    details = scrape_rider_details('https://www.procyclingstats.com/rider/tadej-pogacar')
+    details = scrape_stats_per_season('https://www.procyclingstats.com/rider/tadej-pogacar/statistics/overview')
 
 
     # all years for to scrape available race data
@@ -63,13 +63,15 @@ def main():
             else:
 
                 stage_results = scrape_one_day_results(url)
-                df_oneday = pd.concat([df_oneday, stage_result], axis= 0)
+                df_oneday = pd.concat([df_oneday, stage_results], axis= 0)
+
+            break
 
     # key: rider_name,  value: pd.Dataframe containing rider details
     rider_detail_dict = {}
     rider_detail_df = pd.DataFrame(columns=["DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
-                                            "sprint_points", "climbing_points", "uci_world_ranking", ])
-    stats_per_season_df = pd.DataFrame(columns=[])
+                                            "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking" ])
+    stats_per_season_df = pd.DataFrame(columns=["name", "season", "points", "wins", "racedays"])
     for stage_performance in df_stages.itertuples():
         rider = getattr(stage_performance, "rider_name")
 
@@ -78,10 +80,12 @@ def main():
             rider_detail_df = pd.concat([rider_detail_df,details], axis = 1, ignore_index= True)
 
         else:
-            details = scrape_rider_details()
+            details = scrape_rider_details('https://www.procyclingstats.com/rider/{}'.format(rider))
             rider_detail_dict[rider] = details
             rider_detail_df = pd.concat([rider_detail_df, details], axis=1, ignore_index=True)
-            stats_per_season = scrape_stats_per_season()
+
+            #TODO add name
+            stats_per_season = scrape_stats_per_season('https://www.procyclingstats.com/rider/{}/overview'.format(rider))
             stats_per_season_df = pd.concat([stats_per_season_df, stats_per_season], axis= 1, ignore_index= True)
 
 
