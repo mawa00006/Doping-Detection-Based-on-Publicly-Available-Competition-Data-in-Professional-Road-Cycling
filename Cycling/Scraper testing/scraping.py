@@ -848,16 +848,15 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     OUTPUT
     type: description
     pandas.DataFrame: fetched data includes
-                        "striked" (boolean) true if performance was striked out
+
                         "finish_pos" (int) finish position of rider (`np.NaN` if rider didn't finish stage)
-                        "bib_number" (int) rider's race number
                         "rider_age" (int) rider's age on day of stage
                         "team_name" (str) name of rider's team
                         "rider_name" (str) name of rider
                         "rider_nationality_code" (str) PCS code for rider's nationality
                         "uci_points" (int) number of uci points won by rider in stage
                         "points" (int) number of PCS points won by rider in stage
-                        "finish_time" (datetime.timedelta) time taken to complete stage (or time behind stage winner)
+                        "striked" (boolean) true if performance was striked out
     """
     # start session
     session=HTMLSession()
@@ -873,7 +872,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     rows=results_table.find_all("tr")
 
     # prepare data frame
-    df=pd.DataFrame(columns=["stage_pos","bib_number","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
+    df=pd.DataFrame(columns=["finish_pos","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points"])
 
     # get race information
     race_inf = scrape_one_day_race_information(url)

@@ -2,10 +2,10 @@ import numpy as np
 
 
 from scraping_new import scrape_one_day_results
-
+from scraping_new import scrape_rider_details
 from scraping_new import scrape_races_for_year
 from scraping_new import scrape_stage_race_all_stage_results
-
+from scraping_new import scrape_stats_per_season
 
 import pandas as pd
 import time
@@ -18,7 +18,7 @@ def main():
 
     df_stages, df_oneday, df_TTT, df_ITT = prepare_dataframes()
 
-    #stage_results = scrape_one_day_results('https://www.procyclingstats.com/race/gp-samyn/2020/result')
+    details = scrape_rider_details('https://www.procyclingstats.com/rider/tadej-pogacar')
 
 
     # all years for to scrape available race data
@@ -64,6 +64,35 @@ def main():
 
                 stage_results = scrape_one_day_results(url)
                 df_oneday = pd.concat([df_oneday, stage_result], axis= 0)
+
+    # key: rider_name,  value: pd.Dataframe containing rider details
+    rider_detail_dict = {}
+    rider_detail_df = pd.DataFrame(columns=["DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
+                                            "sprint_points", "climbing_points", "uci_world_ranking", ])
+    stats_per_season_df = pd.DataFrame(columns=[])
+    for stage_performance in df_stages.itertuples():
+        rider = getattr(stage_performance, "rider_name")
+
+        if rider in rider_detail_dict:
+            details = rider_detail_dict[rider]
+            rider_detail_df = pd.concat([rider_detail_df,details], axis = 1, ignore_index= True)
+
+        else:
+            details = scrape_rider_details()
+            rider_detail_dict[rider] = details
+            rider_detail_df = pd.concat([rider_detail_df, details], axis=1, ignore_index=True)
+            stats_per_season = scrape_stats_per_season()
+            stats_per_season_df = pd.concat([stats_per_season_df, stats_per_season], axis= 1, ignore_index= True)
+
+
+
+
+
+
+
+
+    rider_detail_df = pd.DataFrame(columns=["DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
+                                            "sprint_points", "climbing_points", "uci_world_ranking", ])
 
 
 
