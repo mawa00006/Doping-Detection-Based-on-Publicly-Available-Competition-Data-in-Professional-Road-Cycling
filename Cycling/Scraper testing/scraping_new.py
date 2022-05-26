@@ -502,3 +502,67 @@ def parse_one_day_results_row(row) -> pd.Series:
         series["striked"]= 0
 
     return pd.Series(series)
+
+def scrape_rider_details(url:str):
+    """
+    SUMMARY
+    Scrapes rider detail from riders overview page
+    PARAMETERS
+    url to riders overview page E.G. https://www.procyclingstats.com/rider/tadej-pogacar
+    OUTPUT
+    pandas.Dataframe: fetched data includes
+                    "DoB" Date of Birthday
+                    "weight" (int) riders weight in kg
+                    "height" (int) riders height in cm
+                    "one_day_points" (int) total UCI points from one day races
+                    "GC_points"  (int) total UCI points from general classifications
+                    "tt_points"  (int) total UCI points from time trials
+                    "sprint_points" (int) total UCI points from sprints
+                    "climbing_points" (int) total UCI points from climbing races
+                    "uci_world_ranking" (int)  current UCI world ranking
+                    "all_time_ranking" (int) all time UCI ranking
+    """
+
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
+
+    series = pd.Series()
+
+    div = soup.find("div",{"class":"rdr-info-cont"})
+    span = div.find_all("span")
+    pps = div.find_all("div", {"class":"pnt"})
+    rnk = div.find_all("div",{"class": "rnk"} )
+
+    # date of birth
+    d = div.contents[1]
+    m = div.contents[3].split("")[0]
+    y = div.contents[3].split("")[0]
+    series["DoB"]= "{}.{}.{}".format(d,m,y)
+
+    #weight and height
+    series["weight"] = span[1].contents[1].split(" ")[0]
+    series["height"] = span[1].contents[2].split(" ")[0]
+
+    # points per speciality
+    series["one_day_points"] = int(pps[0].text)
+    series["GC_points"] = int(pps[1].text)
+    series["tt_points"] = int(pps[2].text)
+    series["sprint_points"] = int(pps[3].text)
+    series["climbing_points"] = int(pps[4].text)
+
+    #world ranking
+    series["uci_world_ranking"] = int(rnk[1].text)
+    series["all_time_ranking"] = int(rnk[2].text)
+
+
+    return pd.DataFrame(series).T
+
+
+def scrape_stats_per_season(url:str):
+
+    return
+
+
