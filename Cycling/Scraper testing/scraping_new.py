@@ -127,7 +127,7 @@ def parse_tour_races_for_year_row(row) -> pd.Series:
                         "cancelled" (bool) whether race was/is cancelled
                         "race_url" (str) full url to race overview page
     """
-    series={}
+    series=pd.Series(dtype= 'object')
 
     row_details=row.find_all("td")
 
@@ -172,7 +172,7 @@ def scrape_race_information(url:str):
     soup = BeautifulSoup(response.html.html, "lxml")
 
     #series to fill in
-    series = pd.Series()
+    series = pd.Series(dtype= 'object')
 
     #isolate main info
     main = soup.find("div",{"class":"main"})
@@ -255,7 +255,7 @@ def parse_stage_list_item(list_item) -> pd.Series:
                         "stage_name" (str) name of stage (`stage #` or `REST DAY`)
                         "TTT" (boolean) Team Time Trial or not
     """
-    series={}
+    series=pd.Series(dtype= 'object')
 
 
     # url
@@ -371,7 +371,7 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
                         "points" (int) number of PCS points won by rider in stage
                         "striked" (int) result was stripped (doping?)
     """
-    series={}
+    series=pd.Series(dtype= 'object')
     row_data=row.find_all("td")
     striked = row.find_all("s")
 
@@ -426,6 +426,18 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
                         "uci_points" (int) number of uci points won by rider in stage
                         "points" (int) number of PCS points won by rider in stage
                         "striked" (boolean) true if performance was striked out
+                        "date" () date of the race
+                        "race_name" (str) name of race
+                        "race_class" (str) classification of race
+                        "race_ranking" (int) ranking of race
+                        "race_country_code" (str) code for host country
+                        "start_location" (str) name of start town
+                        "end_location" (str) name of finish town
+                        "pcs_points_scale" (str) name of points scale being used
+                        "profile" (str) code for profile of race
+                        "distance" (int) distance of stage in km
+                        "vertical_meters" (int) vertically climbed distance of stage in km
+                        "startlist_quality-score" (int) quality of startlist
     """
     # start session
     session=HTMLSession()
@@ -452,9 +464,6 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
         series = pd.DataFrame(pd.concat([race_inf, series], axis=0)).T
         df=pd.concat([df,series],axis =0,ignore_index=True)
 
-    race_inf = pd.DataFrame(scrape_race_information(url)).T
-    race_inf = pd.concat([race_inf]*df.shape[0], ignore_index= True)
-    df= pd.concat([df,race_inf], axis= 1)
 
     return df
 
@@ -476,12 +485,12 @@ def parse_one_day_results_row(row) -> pd.Series:
                         "points" (int) number of PCS points won by rider in stage
                         "striked" (boolean) true if performance was striked out
     """
-    series={}
+    series=pd.Series(dtype= 'object')
     row_data=row.find_all("td")
     striked = row.find_all("s")
     # race details
     finish_pos=row_data[0].text
-    series["stage_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS", "DSQ"]) else np.NaN
+    series["finish_pos"]=int(finish_pos) if (finish_pos not in ["DF","DNF","OTL","DNS", "DSQ"]) else np.NaN
 
     # rider and team details
     series["team_name"]=row_data[5].text
@@ -529,7 +538,7 @@ def scrape_rider_details(url:str):
     response.html.render()
     soup = BeautifulSoup(response.html.html, "lxml")
 
-    series = pd.Series()
+    series = pd.Series(dtype= 'object')
 
     div = soup.find("div",{"class":"rdr-info-cont"})
     span = div.find_all("span")
@@ -543,8 +552,12 @@ def scrape_rider_details(url:str):
     series["DoB"]= "{}.{}.{}".format(d,m,y)
 
     #weight and height
-    series["weight"] = span[1].contents[1].split(" ")[1]
-    series["height"] = span[2].contents[1].split(" ")[1]
+    try:
+        series["weight"] = span[1].contents[1].split(" ")[1]
+        series["height"] = span[2].contents[1].split(" ")[1]
+    except:
+        series["weight"] = np.NaN
+        series["height"] = np.NaN
 
     # points per speciality
     series["one_day_points"] = int(pps[0].text)
@@ -554,14 +567,22 @@ def scrape_rider_details(url:str):
     series["climbing_points"] = int(pps[4].text)
 
     #world ranking
-    series["uci_world_ranking"] = int(rnk[1].text)
-    series["all_time_ranking"] = int(rnk[2].text)
+    try: # not all riders are ranked, some have an additional PCS ranking
+        if len(rnk)== 3:
+            series["uci_world_ranking"] = int(rnk[1].text)
+            series["all_time_ranking"] = int(rnk[2].text)
+        else:
+            series["uci_world_ranking"] = int(rnk[0].text)
+            series["all_time_ranking"] = int(rnk[1].text)
+    except:
+        series["uci_world_ranking"] = np.NaN
+        series["all_time_ranking"] = np.NaN
 
 
     return pd.DataFrame(series).T
 
 
-def scrape_stats_per_season(url:str):
+def scrape_stats_per_season(url:str, rider_name):
     """
     SUMMARY
     scrape stats per season table from rider overview page
@@ -590,6 +611,7 @@ def scrape_stats_per_season(url:str):
 
     for row in rows:
         df = pd.DataFrame(parse_stats_per_season_row(row)).T
+        df.insert(0, "name", rider_name)
         sps_df = pd.concat([sps_df,df ], axis= 0, ignore_index= True)
 
     return sps_df
@@ -608,7 +630,7 @@ def parse_stats_per_season_row(row):
                 "racedays" (int) racedays in a given season
 
     """
-    series = pd.Series()
+    series = pd.Series(dtype= 'object')
 
     row= row.find_all("td")
 
