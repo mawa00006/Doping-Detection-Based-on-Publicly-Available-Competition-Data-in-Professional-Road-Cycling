@@ -444,6 +444,7 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     response=session.get(url)
     response.html.render()
     soup=BeautifulSoup(response.html.html,"lxml")
+    print(url)
 
     # isolate desired table
     table=soup.find("table")

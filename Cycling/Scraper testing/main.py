@@ -26,12 +26,11 @@ def main():
         # get all professional races held in a given year
         races = scrape_races_for_year(year)
 
+        races = races.head()
+
         # for each race scrape all data
-        i= 0
         for race in races.itertuples():
-            if i == 2:
-                break
-            i+=1
+
             # save basic information about the race in a dataframe
             # to concat it to each performance point later
 
@@ -46,8 +45,11 @@ def main():
 
             # scrape information and final result of each stage in a stage race
             if stage_race:
-                stage_results = scrape_stage_race_all_stage_results(url+'/overview')
 
+                try:
+                    stage_results = scrape_stage_race_all_stage_results(url+'/overview')
+                except:
+                    continue
                 # add race info to each performance point and concat all stage dataframes
                 for i in range(len(stage_results)):
 
@@ -61,9 +63,10 @@ def main():
 
             # scrape information and final result of a one-day race
             else:
-
-                stage_result = scrape_one_day_results(url)
-
+                try:
+                    stage_result = scrape_one_day_results(url)
+                except:
+                    continue
                 race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
                 out_df = pd.concat([stage_result, race_inf], axis=1)
 
@@ -102,6 +105,7 @@ def details_sps(dict, df, stats_per_season_df):
         rider = getattr(stage_performance, "rider_name")
 
         if rider in dict:
+            print(rider, 'in dict')
             details = dict[rider]
             rider_detail_df = pd.concat([rider_detail_df, details], axis=0, ignore_index=True)
 
@@ -143,9 +147,6 @@ def prepare_dataframes():
     stats_per_season_df = pd.DataFrame(columns=["name", "season", "points", "wins", "racedays"])
 
     return df_stages, df_oneday, stats_per_season_df
-
-
-
 
 
 if __name__ == "__main__":
