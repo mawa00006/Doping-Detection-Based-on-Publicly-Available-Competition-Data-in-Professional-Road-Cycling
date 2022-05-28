@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import requests
 from requests_html import HTMLSession # to remove
 from datetime import timedelta
 import pandas as pd
@@ -183,7 +182,10 @@ def scrape_race_information(url:str):
     #scrape data
     series["date"] = datetime.strptime(infolist[1].text, '%d %B %Y').date()
     series["race_name"] = main.find("h1").text
-    series["race_class"] = main.find_all("font")[1].text
+    try:
+        series["race_class"] = main.find_all("font")[1].text
+    except:
+        series["race_class"] = np.NaN
     series["race_ranking"] = infolist[23].text
     series["race_country_code"] = main.find("span",{"class":"flag"})["class"][1]
     series["start_location"] = infolist[19].text
@@ -458,7 +460,6 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
 
     # get race information
     race_inf = scrape_race_information(url)
-
     # fill data frame
     for row in rows:
         series=parse_one_day_results_row(row)
@@ -497,7 +498,7 @@ def parse_one_day_results_row(row) -> pd.Series:
     series["team_name"]=row_data[5].text
     series["rider_name"]=row_data[3].find('a').attrs['href'].split('/')[1]
     series["rider_nationality_code"]=row_data[3].find("span",{"class":"flag"})["class"][-1]
-    series["rider_age"]=int(row_data[4].text)
+    series["rider_age"]=int(row_data[4].text) if (len(row_data[4].text) == 2) else np.NaN
 
     # point results
     uci_points=row_data[6].text

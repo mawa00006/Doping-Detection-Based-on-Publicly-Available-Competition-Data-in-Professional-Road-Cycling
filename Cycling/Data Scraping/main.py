@@ -55,10 +55,12 @@ def main():
                     stage_results = scrape_stage_race_all_stage_results(url+'/overview')
                 except:
                     continue
+
                 # add race info to each performance point and concat all stage dataframes
                 for i in range(len(stage_results)):
 
                     stage_result = stage_results[i]
+                    if stage_result is None: continue
 
                     race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
                     out_df = pd.concat([stage_result, race_inf], axis=1)
@@ -72,6 +74,7 @@ def main():
                     stage_result = scrape_one_day_results(url)
                 except:
                     continue
+                if stage_result is None: continue
                 race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
                 out_df = pd.concat([stage_result, race_inf], axis=1)
 
