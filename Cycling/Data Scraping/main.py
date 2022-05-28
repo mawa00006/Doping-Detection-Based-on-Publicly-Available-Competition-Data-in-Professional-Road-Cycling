@@ -23,15 +23,13 @@ def main():
     rider_detail_dict = {}
 
     # all years for to scrape available race data
-    years = np.arange(2000, 2023, 1)
+    years =np.arange(2000, 2023, 1)
 
     # scrape data for every race of a year
     for year in years:
 
         # get all professional races held in a given year
         races = scrape_races_for_year(year)
-
-
 
         # for each race scrape all data
         for race in races.itertuples():
@@ -79,6 +77,7 @@ def main():
                 out_df = pd.concat([stage_result, race_inf], axis=1)
 
                 df_oneday = pd.concat([df_oneday, out_df], axis= 0)
+
 
 
     #get rider details and stats per season
@@ -137,6 +136,8 @@ def details_sps( df, stats_per_season_df):
             stats_per_season_df = pd.concat([stats_per_season_df, stats_per_season], axis=0, ignore_index=True)
 
     if df.shape[0] == rider_detail_df.shape[0]:
+        df.reset_index(drop=True, inplace=True)
+        rider_detail_df.reset_index(drop=True, inplace=True)
         df = pd.concat([df, rider_detail_df], axis = 1, ignore_index= True)
 
 
