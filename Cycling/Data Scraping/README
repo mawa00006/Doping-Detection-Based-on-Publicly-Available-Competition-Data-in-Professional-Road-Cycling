@@ -1,0 +1,36 @@
+How to scrape data from procyclingstats.com using this script.
+
+
+Use the included environment.yml file to duplicate the env that was used to run this script
+on your machine.
+
+To able to run the script on a unix machine you need to include the requests_html.py file
+which allows 'headless' browser access. Using this file creates a warning that can be ignored.
+When using a Windows/Mac machine you can delete the file and use the vanilla requests_html library.
+
+To export the dataframes change the paths inlines 103-105 in main.py.
+
+
+INPUT (main.py):
+
+years (np.array):
+    Array containing the years for which to scrape the data (YYYY)
+
+OUTPUT:
+
+stage_results (pd.Dataframe):
+    Dataframe containing results of all stage races held in the given time intervall.
+    Each row corresponds to a single performance of a rider.
+
+
+one_day_results (pd.dataframe):
+    Dataframe containing results of all one day races held in the given time intervall.
+    Each row corresponds to a single performance of a rider.
+
+stats_per_season (pd.Datframe):
+    Dataframe containing total achieved UCI points, number of wins and racedays per year per rider.
+    Rows without a value for season contain the sum of this features over the career.
+
+
+
+

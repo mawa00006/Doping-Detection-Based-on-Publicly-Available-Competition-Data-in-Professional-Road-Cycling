@@ -10,7 +10,7 @@ import numpy as np
 import time
 
 
-def main():
+def main(years):
     #safe start time to calculate total runtime
     start_time = time.time()
 
@@ -22,8 +22,6 @@ def main():
     global rider_detail_dict
     rider_detail_dict = {}
 
-    # all years for to scrape available race data
-    years =np.arange(2000, 2023, 1)
 
     # scrape data for every race of a year
     for year in years:
@@ -169,5 +167,7 @@ def prepare_dataframes():
 
 
 if __name__ == "__main__":
-    main()
+    # all years for to scrape available race data
+    years = np.arange(2000, 2023, 1)
+    main(years)
 
