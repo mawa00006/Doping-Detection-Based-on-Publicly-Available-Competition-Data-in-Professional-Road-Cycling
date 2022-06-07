@@ -210,12 +210,4 @@ if __name__ == "__main__":
     main(years)
 
 
-    for file in os.listdir("Test-Data/riderdetaildicts/"):
-            if file.endswith('.csv'):
-                if file == 'dict.csv':
-                    continue
-                try: tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
-                except: continue
-                tmp.to_csv('Test-Data/riderdetaildicts/dict.csv', mode = 'a')
-
 
