@@ -38,6 +38,7 @@ def main(years):
 
     # scrape data for every race of a year
     for year in years:
+        print(year)
 
         # get all professional races held in a given year
         races = scrape_races_for_year(year)
