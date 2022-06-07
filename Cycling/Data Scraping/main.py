@@ -209,5 +209,33 @@ if __name__ == "__main__":
 
     main(years)
 
+    # concat all scraped files
+
+    for file in os.listdir("Test-Data/riderdetaildicts/"):
+            if file.endswith('.csv'):
+                if file == 'dict.csv':
+                    continue
+                try: tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
+                except: continue
+                tmp.to_csv('Test-Data/riderdetaildicts/dict.csv', mode = 'a')
+
+    for file in os.listdir("Test-Data/onedayraces/"):
+            if file.endswith('.csv'):
+                try: tmp = pd.read_csv(os.path.join("Test-Data/onedayraces/", file))
+                except: continue
+                tmp.to_csv('Test-Data/onedayraces/final_oneday.csv', mode = 'a')
+
+    for file in os.listdir("Test-Data/sps/"):
+            if file.endswith('.csv'):
+                try: tmp = pd.read_csv(os.path.join("Test-Data/sps/", file))
+                except: continue
+                tmp.to_csv('Test-Data/onedayraces/final_sps.csv', mode = 'a')
+
+    for file in os.listdir("Test-Data/Stageraces/"):
+            if file.endswith('.csv'):
+                try: tmp = pd.read_csv(os.path.join("Test-Data/Stageraces/", file))
+                except: continue
+                tmp.to_csv('Test-Data/onedayraces/final_stageraces.csv', mode = 'a')
+
 
 
