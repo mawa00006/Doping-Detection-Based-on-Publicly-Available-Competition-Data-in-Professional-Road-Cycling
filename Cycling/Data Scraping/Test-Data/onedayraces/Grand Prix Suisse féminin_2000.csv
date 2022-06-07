@@ -1,0 +1,64 @@
+,finish_pos,rider_age,team_name,rider_name,rider_nationality_code,uci_points,points,striked,date,race_name,race_class,race_ranking,race_country_code,start_location,end_location,pcs_points_scale,profile,distance,vertical_meters,startlist_quality_score,stage_race,tour,tour_code,DoB,weight,height,one_day_points,GC_points,tt_points,sprint_points,climbing_points,uci_world_ranking,all_time_ranking
+0,1,25,,pia-sundstedt,fi,0,275,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,2.May.1975,52,1.68,1574,375,866,786,227,nan,nan
+1,2,26,,fabiana-luperini,it,0,200,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,14.January.1974,43,1.57,3619,2900,2624,6086,2472,nan,nan
+2,3,24,,mirjam-melchers,nl,0,150,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,26.September.1975,59,1.75,7566,1607,4681,4557,829,nan,nan
+3,4,24,,diana-ziliute,lt,0,120,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,28.May.1976,nan,nan,4814,819,3568,6191,1125,nan,nan
+4,5,24,Team Farm Frites - Hartol,susanne-ljungskog,se,0,100,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,16.March.1976,57,1.71,6194,2252,4731,4657,2162,nan,nan
+5,6,32,,alessandra-cappellotto,it,0,90,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,27.August.1968,60,1.73,2179,577,1269,2546,55,nan,nan
+6,7,29,,jolanta-polikeviciute,lt,0,80,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,25.September.1970,50,1.65,1436,556,1018,2699,606,nan,nan
+7,8,21,,nicole-brandli,ch,0,70,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,18.June.1979,48,1.67,3298,1757,3477,3806,1656,nan,nan
+8,9,24,,cindy-pieters,be,0,60,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,24.January.1976,nan,nan,1041,129,371,477,22,nan,nan
+9,10,29,,yvonne-troost,nl,0,50,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,4.February.1971,nan,nan,686,34,134,1236,0,nan,nan
+10,11,29,,catherine-marsal,fr,0,46,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,20.January.1971,53,1.68,2363,815,1917,2543,28,nan,nan
+11,12,24,,chantal-beltman,nl,0,42,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,25.August.1976,68,1.80,3384,340,1229,2414,455,nan,nan
+12,13,29,,priska-doppmann,ch,0,38,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,10.May.1971,55,1.68,2786,495,3206,2529,983,nan,nan
+13,14,28,,lenka-ilavska,sk,0,34,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,5.May.1972,nan,nan,495,369,289,704,0,nan,nan
+14,15,22,,arenda-grimberg,nl,0,30,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,10.March.1978,nan,nan,1206,144,168,1283,108,nan,nan
+15,16,22,,ghita-beltman,nl,0,28,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,5.April.1978,nan,nan,365,158,325,771,93,nan,nan
+16,17,30,,heidi-van-de-vijver,be,0,26,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,31.December.1969,nan,nan,1835,627,500,1818,0,nan,nan
+17,18,35,,yvonne-schnorf,ch,0,24,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,28.July.1965,nan,nan,475,36,0,155,0,nan,nan
+18,19,29,,rasa-polikeviciute,lt,0,22,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,25.September.1970,nan,nan,1326,966,1238,2767,201,nan,nan
+19,20,23,,marika-murer,ch,0,20,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,2.June.1977,nan,nan,70,16,0,122,0,nan,nan
+20,21,27,Team Farm Frites - Hartol,debby-mansveld,nl,0,19,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,21.December.1972,nan,nan,1487,206,168,1879,299,nan,nan
+21,22,21,,mirella-van-melis,nl,0,18,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,8.January.1979,nan,nan,451,6,47,594,0,nan,nan
+22,23,30,,sandra-wampfler,ch,0,17,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,5.April.1970,nan,nan,164,52,34,182,0,nan,nan
+23,24,23,,marion-brauen,ch,0,16,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,3.May.1977,nan,nan,199,0,7,126,1,nan,nan
+24,25,24,,sanna-lehtimaki,fi,0,15,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,16.November.1975,nan,nan,333,12,0,81,0,nan,nan
+25,26,29,,francisca-russli,ch,0,14,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,20.February.1971,nan,nan,14,0,0,0,0,nan,nan
+26,27,27,,marielle-van-scheppingen,nl,0,13,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,2.May.1973,nan,nan,108,0,307,133,0,nan,nan
+27,28,21,Team Farm Frites - Hartol,andrea-bosman,nl,0,12,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,6.August.1979,nan,nan,1320,152,392,1475,1227,nan,nan
+28,,26,,zulfiya-zabirova,ru,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,19.December.1973,65,1.78,2904,662,4404,2126,286,nan,nan
+29,,24,,annette-beutler,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,29.June.1976,nan,nan,1851,312,634,1655,561,nan,nan
+30,,28,,ann-mathiesen,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,18.September.1971,nan,nan,17,0,0,0,0,nan,nan
+31,,30,,sigrid-corneo,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,27.April.1970,54,1.76,949,319,254,1176,847,nan,nan
+32,,31,,kerry-hellmuth,us,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,21.August.1969,nan,nan,96,0,0,3,0,nan,nan
+33,,29,,gabriella-pregnolato,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,30.May.1971,nan,nan,689,0,704,1074,0,nan,nan
+34,,31,,giovanna-troldi,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,31.October.1968,nan,nan,326,0,506,372,60,nan,nan
+35,,30,,marcia-eicher-vouets,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,30.April.1970,nan,nan,471,195,599,530,22,nan,nan
+36,,30,,valeria-cappellotto,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,28.January.1970,nan,nan,477,53,6,695,0,nan,nan
+37,,24,,sonia-rocca,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,5.April.1976,nan,nan,109,0,5,362,0,nan,nan
+38,,27,,zita-urbonaite,lt,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,3.September.1973,nan,nan,583,30,5,827,8,nan,nan
+39,,32,,alexandra-bahler,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,14.March.1968,nan,nan,111,0,0,53,0,nan,nan
+40,,25,,sanne-schmidt,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,8.December.1974,nan,nan,89,0,0,0,0,nan,nan
+41,,23,,nadine-bruhn,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,10.April.1977,nan,nan,5,0,0,0,0,nan,nan
+42,,22,,tania-belvederesi,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,31.January.1978,nan,nan,458,3,64,906,170,nan,nan
+43,,28,,lotte-schmidt,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,6.January.1972,nan,nan,108,0,0,3,0,nan,nan
+44,,19,,barbara-cazzaniga,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,4.July.1981,nan,nan,32,0,1,56,0,nan,nan
+45,,27,,deirdre-demet-barry,us,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,8.October.1972,nan,nan,1406,430,1857,1462,58,nan,nan
+46,,33,,roberta-bonanomi,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,15.October.1966,60,1.66,1172,797,378,1695,36,nan,nan
+47,,24,,sara-savino,it,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,17.September.1975,nan,nan,47,0,0,0,0,nan,nan
+48,,23,,tatiana-stiajkina,ua,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,10.April.1977,51,1.70,690,527,1466,1394,630,nan,nan
+49,,29,,valentina-polkhanova,ru,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,15.August.1971,nan,nan,322,1167,1714,1878,40,nan,nan
+50,,20,,pernille-langelund-jakobsen,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,29.December.1979,nan,nan,30,0,2,0,0,nan,nan
+51,,26,,janette-bohmova,sk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,13.April.1974,nan,nan,7,0,0,0,0,nan,nan
+52,,19,Team Farm Frites - Hartol,sharon-van-essen,nl,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,3.March.1981,nan,nan,367,75,30,224,106,nan,nan
+53,,27,,alexandra-ka-wah-yeung,hk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,15.September.1972,48,1.60,0,0,0,0,0,nan,nan
+54,,19,,caroline-orens,be,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,27.January.1981,nan,nan,2,0,0,0,0,nan,nan
+55,,30,,elena-barillova,sk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,5.September.1969,nan,nan,250,323,0,185,0,nan,nan
+56,,29,,nathalie-griggio,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,20.April.1971,nan,nan,0,0,0,0,0,nan,nan
+57,,28,,rikke-olsen,dk,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,20.April.1972,nan,nan,426,0,0,109,0,nan,nan
+58,,27,,julie-pekarkova,cz,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,6.March.1973,nan,nan,123,13,94,64,0,nan,nan
+59,,39,,tomoko-sekiya,jp,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,4.January.1961,nan,nan,5,0,0,4,0,nan,nan
+60,,19,,mirjam-hauser-senn,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,9.September.1980,nan,nan,41,0,7,64,6,nan,nan
+61,,19,,laure-werner,be,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,22.February.1981,nan,nan,284,6,87,164,311,nan,nan
+62,,19,,alexandra-born,ch,0,0,0,2000-09-03,Grand Prix Suisse féminin,(CDM),93,ch,,,F-WWT,p0,133.1 km,,0,False,CDM,22,1.October.1980,nan,nan,7,0,0,22,0,nan,nan

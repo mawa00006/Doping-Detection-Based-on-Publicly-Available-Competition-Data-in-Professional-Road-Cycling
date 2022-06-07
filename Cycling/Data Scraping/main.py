@@ -70,6 +70,8 @@ def main(years):
                 # add race info to each performance point and concat all stage dataframes
                 for i in range(len(stage_results)):
 
+                    df_stages, df_oneday, stats_per_season_df = prepare_dataframes()
+
                     stage_result = stage_results[i]
                     if stage_result is None: continue
 
@@ -88,7 +90,7 @@ def main(years):
                                          'tour_code',
                                          "DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
                                          "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking"]
-                    df_stages.to_csv('Test-Data/Stageraces/{}_{}.csv'.format(df_stages.iloc[0]['race_name'], year), index=True)
+                    df_stages.to_csv('Test-Data/Stageraces/{}_{}_stage{}.csv'.format(df_stages.iloc[0]['race_name'], year,1), index=True)
 
                     exportdict(df_stages.iloc[0]['race_name'], year)
                     rider_detail_dict.update(stage_dict)
@@ -150,12 +152,14 @@ def details_sps( df, stats_per_season_df):
 
         else:
             print(rider)
-            details = scrape_rider_details('https://www.procyclingstats.com/rider/{}'.format(rider))
+            try: details = scrape_rider_details('https://www.procyclingstats.com/rider/{}'.format(rider))
+            except: details = pd.DataFrame([np.NaN]*10).T
             stage_dict[rider] = details
             rider_detail_df = pd.concat([rider_detail_df, details], axis=0, ignore_index=True)
 
-            stats_per_season = scrape_stats_per_season(
+            try: stats_per_season = scrape_stats_per_season(
                 'https://www.procyclingstats.com/rider/{}/statistics/overview'.format(rider), rider)
+            except: stats_per_season = pd.DataFrame([np.NaN]*4).T
             stats_per_season_df = pd.concat([stats_per_season_df, stats_per_season], axis=0, ignore_index=True)
 
     if df.shape[0] == rider_detail_df.shape[0]:
@@ -171,7 +175,7 @@ def details_sps( df, stats_per_season_df):
 
 def prepare_dataframes():
 
-    # prepare dataframe fro stage races
+    # prepare dataframe for stage races
     df_stages = pd.DataFrame(
         columns=['stage_pos', 'gc_pos', 'rider_age', 'team_name', 'rider_name',
                 'rider_nationality_code', 'uci_points', 'points', 'striked', 'stage_name',
@@ -194,14 +198,24 @@ def prepare_dataframes():
 if __name__ == "__main__":
     # all years for which to scrape available race data
     years = np.arange(2000, 2023, 1)
-    try:
-        for file in os.listdir("Test-Data/riderdetaildicts/"):
+
+    for file in os.listdir("Test-Data/riderdetaildicts/"):
             if file.endswith('.csv'):
                 if file == 'dict.csv':
                     continue
-                tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
+                try: tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
+                except: continue
                 tmp.to_csv('Test-Data/riderdetaildicts/dict.csv', mode = 'a')
-    except:
-        pass
+
     main(years)
+
+
+    for file in os.listdir("Test-Data/riderdetaildicts/"):
+            if file.endswith('.csv'):
+                if file == 'dict.csv':
+                    continue
+                try: tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
+                except: continue
+                tmp.to_csv('Test-Data/riderdetaildicts/dict.csv', mode = 'a')
+
 

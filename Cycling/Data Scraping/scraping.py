@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession # to remove
-from datetime import timedelta
 import pandas as pd
 import numpy as np
 import re
@@ -180,21 +179,30 @@ def scrape_race_information(url:str):
     infolist = soup.find("ul", {"class": "infolist"}).find_all("div")
 
     #scrape data
-    series["date"] = datetime.strptime(infolist[1].text, '%d %B %Y').date()
-    series["race_name"] = main.find("h1").text
-    try:
-        series["race_class"] = main.find_all("font")[1].text
-    except:
-        series["race_class"] = np.NaN
-    series["race_ranking"] = infolist[23].text
-    series["race_country_code"] = main.find("span",{"class":"flag"})["class"][1]
-    series["start_location"] = infolist[19].text
-    series["end_location"] = infolist[21].text
-    series["pcs_points_scale"] = infolist[11].text
-    series["profile"] = infolist[13].contents[0].attrs['class'][2]
-    series["distance"] = infolist[9].text
-    series["vertical_meters"] = infolist[17].text
-    series["startlist_quality_score"] = infolist[25].text
+    try: series["date"] = datetime.strptime(infolist[1].text, '%d %B %Y').date()
+    except: series['date'] = np.Nan
+    try: series["race_name"] = main.find("h1").text
+    except: series["race_name"] = np.NaN
+    try: series["race_class"] = main.find_all("font")[1].text
+    except: series["race_class"] = np.NaN
+    try: series["race_ranking"] = infolist[23].text
+    except: series["race_ranking"] = np.NaN
+    try: series["race_country_code"] = main.find("span",{"class":"flag"})["class"][1]
+    except: series["race_country_code"] = np.NaN
+    try: series["start_location"] = infolist[19].text
+    except: series["start_location"] = np.NaN
+    try: series["end_location"] = infolist[21].text
+    except: series["end_location"] =  np.NaN
+    try: series["pcs_points_scale"] = infolist[11].text
+    except: series["pcs_points_scale"] = np.NaN
+    try: series["profile"] = infolist[13].contents[0].attrs['class'][2]
+    except: series["profile"] = np.NaN
+    try: series["distance"] = infolist[9].text
+    except: series["distance"] = np.NaN
+    try: series["vertical_meters"] = infolist[17].text
+    except: series["vertical_meters"] = np.NaN
+    try: series["startlist_quality_score"] = infolist[25].text
+    except: series["startlist_quality_score"] = np.NaN
 
     return pd.Series(series)
 
@@ -389,10 +397,14 @@ def parse_stage_race_stage_results_row(row) -> pd.Series:
     series["gc_pos"]=int(gc_pos) if (gc_pos!="") else np.NaN
 
     # rider and team details
-    series["rider_age"]=row_data[6].text
-    series["team_name"]=row_data[7].text
-    series["rider_name"]=row_data[5].find('a').attrs['href'].split('/')[1]
-    series["rider_nationality_code"]=row_data[5].find("span",{"class":"flag"})["class"][-1]
+    try: series["rider_age"]=row_data[6].text
+    except: series["rider_age"]= np.NaN
+    try: series["team_name"]=row_data[7].text
+    except: series["team_name"]= np.NaN
+    try: series["rider_name"]=row_data[5].find('a').attrs['href'].split('/')[1]
+    except: series["rider_name"] = np.NaN
+    try: series["rider_nationality_code"]=row_data[5].find("span",{"class":"flag"})["class"][-1]
+    except: series["rider_nationality_code"]= np.NaN
 
     # point results
     uci_points=row_data[8].text
@@ -548,10 +560,13 @@ def scrape_rider_details(url:str):
     rnk = div.find_all("div",{"class": "rnk"} )
 
     # date of birth
-    d = div.contents[1]
-    m = div.contents[3].split(" ")[1]
-    y = div.contents[3].split(" ")[2]
-    series["DoB"]= "{}.{}.{}".format(d,m,y)
+    try:
+        d = div.contents[1]
+        m = div.contents[3].split(" ")[1]
+        y = div.contents[3].split(" ")[2]
+        series["DoB"]= "{}.{}.{}".format(d,m,y)
+    except:
+        series["DoB"]= np.NaN
 
     #weight and height
     try:

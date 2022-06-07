@@ -1,0 +1,53 @@
+,finish_pos,rider_age,team_name,rider_name,rider_nationality_code,uci_points,points,striked,date,race_name,race_class,race_ranking,race_country_code,start_location,end_location,pcs_points_scale,profile,distance,vertical_meters,startlist_quality_score,stage_race,tour,tour_code,DoB,weight,height,one_day_points,GC_points,tt_points,sprint_points,climbing_points,uci_world_ranking,all_time_ranking
+0,1,19,,jurgen-van-goolen,be,0,15,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,28.November.1980,70,1.83,499,999,637,534,308,nan,nan
+1,2,20,Flanders - Prefetex,wim-van-huffel,be,0,10,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,28.May.1979,66,1.82,339,715,15,334,538,nan,nan
+2,3,21,,gregory-faghel,fr,0,7,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,31.January.1979,nan,nan,25,0,2,55,0,nan,nan
+3,4,22,,jan-verstraeten,be,0,4,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,11.March.1978,nan,nan,22,6,8,73,0,nan,nan
+4,5,22,,yoeri-beyens,be,0,2,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,27.April.1978,nan,nan,26,18,38,64,9,nan,nan
+5,6,21,,johan-dekkers,be,0,1,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,15.September.1978,nan,nan,49,13,0,165,0,nan,nan
+6,7,22,,nicolas-inaudi,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,21.January.1978,67,1.80,280,47,0,334,20,nan,nan
+7,8,19,,thomas-bodo,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,17.October.1980,nan,nan,18,42,2,46,12,nan,nan
+8,9,22,,nico-sijmens,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,1.April.1978,69,1.75,1036,735,194,1472,268,nan,nan
+9,10,21,Collstrop - De Federale Verzekeringen,andy-cappelle,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,30.April.1979,71,1.82,761,288,163,968,64,nan,nan
+10,11,20,,julien-goossens,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,13.October.1979,nan,nan,2,0,0,38,0,nan,nan
+11,12,22,,nicolas-paris,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,3.February.1978,nan,nan,7,0,2,33,1,nan,nan
+12,13,21,7Up - Colorado Cyclist,david-zabriskie,us,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,12.January.1979,67,1.83,31,1075,3434,199,116,nan,nan
+13,14,21,,kristof-van-gestel,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,9.May.1978,nan,nan,0,0,0,0,0,nan,nan
+14,15,21,,johan-coenen,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,4.February.1979,67,1.78,851,617,21,1044,124,nan,nan
+15,16,20,,jonathan-kern,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,6.February.1980,nan,nan,0,1,0,52,0,nan,nan
+16,17,21,Spar - OKI - Daewoo,james-vanlandschoot,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,26.August.1978,67,1.66,861,114,39,1856,29,nan,nan
+17,18,21,,jef-peeters,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,20.December.1978,nan,nan,122,13,37,200,20,nan,nan
+18,19,21,,nicolas-portal,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,23.April.1979,nan,nan,160,433,168,284,231,nan,nan
+19,20,22,,koen-scherre,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,2.January.1978,nan,nan,7,0,0,0,0,nan,nan
+20,21,,,david-coelho,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,nan,nan,,0.,,0.,,0.,,0.
+21,22,18,,frederic-lubach,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,23.October.1981,nan,nan,5,2,33,106,1,nan,nan
+22,23,20,,jerome-bouchet,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,7.October.1979,nan,nan,15,0,19,36,1,nan,nan
+23,24,20,,erik-lievens,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,4.October.1979,nan,nan,28,11,10,95,6,nan,nan
+24,25,21,Jelly Belly Cycling Team,derek-wilkerson,us,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,20.March.1979,nan,nan,18,0,0,16,0,nan,nan
+25,26,20,,andrey-kashechkin,kz,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,21.March.1980,70,1.85,739,1590,1461,694,912,nan,nan
+26,27,20,,joost-vanmeerhaeghe,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,2.June.1979,nan,nan,0,0,0,2,0,nan,nan
+27,28,18,,mathieu-lamothe,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,2.June.1981,nan,nan,0,0,1,3,0,nan,nan
+28,29,21,,mike-guilliams,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,16.May.1978,nan,nan,0,0,0,2,0,nan,nan
+29,30,20,,cedric-coutouly,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,26.January.1980,72,1.84,340,87,7,618,42,nan,nan
+30,31,22,,jeroen-boelen,nl,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,27.January.1978,nan,nan,109,10,3,250,24,nan,nan
+31,32,21,,steffen-beat,ch,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,16.January.1979,nan,nan,0,0,5,0,0,nan,nan
+32,33,21,,yann-tournier,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,26.October.1978,nan,nan,42,7,22,18,3,nan,nan
+33,34,,,eric-duleil,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,nan,nan,,0.,,2.,,1.,,0.
+34,35,20,,pim-goos,nl,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,27.September.1979,nan,nan,0,0,0,2,0,nan,nan
+35,36,19,,michael-servranckx,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,6.April.1981,nan,nan,0,0,0,0,0,nan,nan
+36,37,18,,yannick-talabardon,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,6.July.1981,67,1.90,236,467,30,454,89,nan,nan
+37,38,21,,john-gadret,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,22.April.1979,58,1.70,622,1824,219,463,2099,nan,nan
+38,39,20,,david-plas,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,11.August.1979,nan,nan,7,0,2,20,0,nan,nan
+39,40,21,Collstrop - De Federale Verzekeringen,frederik-penne,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,5.June.1978,nan,nan,26,0,0,40,0,nan,nan
+40,41,19,,vincent-socquin,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,19.May.1980,nan,nan,0,0,0,16,0,nan,nan
+41,42,19,,tom-boonen,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,15.October.1980,82,1.92,10368,1762,1146,11250,1299,nan,nan
+42,43,20,,eric-trokimo,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,14.April.1980,nan,nan,0,2,3,9,0,nan,nan
+43,44,22,,pascal-moisseron,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,15.February.1978,nan,nan,0,0,0,0,0,nan,nan
+44,45,21,,ruud-verspaandonck,nl,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,1.May.1979,nan,nan,4,0,0,24,0,nan,nan
+45,46,21,,bonaventure-neyt,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,16.August.1978,nan,nan,0,0,0,3,0,nan,nan
+46,47,18,,jimmy-herman,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,22.October.1981,nan,nan,0,0,0,0,0,nan,nan
+47,48,22,,renaud-dion,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,6.January.1978,65,1.78,537,212,4,710,179,nan,nan
+48,49,21,,gael-bouvet,fr,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,25.June.1978,nan,nan,0,0,0,3,0,nan,nan
+49,50,20,,jean-francois-raes,be,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,22.June.1979,nan,nan,0,0,0,0,0,nan,nan
+50,68,22,Nutra Fig - Noni Cycling Team,aaron-olsen,us,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,11.January.1978,nan,nan,43,105,53,132,7,nan,nan
+51,85,21,,brice-jones,us,0,0,0,2000-05-01,Liège-Bastogne-Liège U23,,25,be,Liège,Liège,1.2,p0,0 km,,0,False,-,25,9.January.1979,nan,nan,17,1,5,163,8,nan,nan
