@@ -21,7 +21,9 @@ def main(years):
     # Dictionary to save rider details, so they don't have to be scraped again for every performance point of a rider
     global rider_detail_dict
     global stage_dict
+    global race_url_dict
 
+    race_url_dict = {}
     rider_detail_dict = {}
     # extract rider_detail_dict from .csv file
     try:
@@ -47,6 +49,7 @@ def main(years):
         # for each race scrape all data
         for race in races.itertuples():
 
+
             stage_dict = {}
             df_stages, df_oneday, stats_per_season_df = prepare_dataframes()
             # save basic information about the race in a dataframe
@@ -58,6 +61,12 @@ def main(years):
             # get race page url
             url = getattr(race, 'race_url')
 
+            # check if race was already scraped
+            if url in race_url_dict:
+                continue
+
+            race_url_dict[url] = np.NaN
+
             #stage race or one day race
             stage_race = getattr(race, 'stage_race')
 
@@ -66,7 +75,8 @@ def main(years):
                 try:
                     try:
                         stage_results = scrape_stage_race_all_stage_results(url+'/overview')
-                    except:
+                    except Exception as e:
+                        print('Exception occured while scraping stage results', e, getattr(race, 'race_url'))
                         continue
 
                     # add race info to each performance point and concat all stage dataframes
@@ -75,7 +85,9 @@ def main(years):
                         df_stages, df_oneday, stats_per_season_df = prepare_dataframes()
 
                         stage_result = stage_results[i]
-                        if stage_result is None: continue
+                        if stage_result is None:
+                            print(url, 'stage', i, 'is none')
+                            continue
 
                         race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
                         out_df = pd.concat([stage_result, race_inf], axis=1)
@@ -97,13 +109,16 @@ def main(years):
                         exportdict(df_stages.iloc[0]['race_name'], year)
                         rider_detail_dict.update(stage_dict)
                         stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}_stage{}.csv'.format(df_stages.iloc[0]['race_name'], year, i), index=True)
-                except: continue
+                except Exception as e:
+                    print('Exception occured while merging stage results', e, getattr(race, 'stage_url'))
+                    continue
             # scrape information and final result of a one-day race
             else:
                 try:
                     try:
                         stage_result = scrape_one_day_results(url)
-                    except:
+                    except Exception as e:
+                        print('Exception occured while scraping onedayresults', e, getattr(race_info_df, 'stage_url'))
                         continue
                     if stage_result is None: continue
                     race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
@@ -132,6 +147,8 @@ def main(years):
     end_time = time.time()
     print('Runtime:', (end_time - start_time) / 60, 'min')
 
+    return True
+
 def exportdict(racename, year):
     w = csv.writer(open('Test-Data/riderdetaildicts/dict_{}_{}.csv'.format(racename, year), 'w'))
     for key, val in stage_dict.items():
@@ -149,12 +166,12 @@ def details_sps( df, stats_per_season_df):
         rider = getattr(stage_performance, "rider_name")
 
         if rider in rider_detail_dict:
-            print(rider, 'in dict')
+            #print(rider, 'in dict')
             details = rider_detail_dict[rider]
             rider_detail_df = pd.concat([rider_detail_df, details], axis=0, ignore_index=True)
 
         else:
-            print(rider)
+            #print(rider)
             try: details = scrape_rider_details('https://www.procyclingstats.com/rider/{}'.format(rider))
             except: details = pd.DataFrame([np.NaN]*10).T
             stage_dict[rider] = details
@@ -209,8 +226,14 @@ if __name__ == "__main__":
                 try: tmp = pd.read_csv(os.path.join("Test-Data/riderdetaildicts/", file))
                 except: continue
                 tmp.to_csv('Test-Data/riderdetaildicts/dict.csv', mode = 'a')
-
-    main(years)
+    while(1):
+        try:
+           if main(years):
+               break
+           else:
+               continue
+        except:
+            continue
 
     # concat all scraped files
 

@@ -179,7 +179,7 @@ def scrape_race_information(url:str):
         # isolate race information table
         infolist = soup.find("ul", {"class": "infolist"}).find_all("div")
     except Exception as e:
-        print('Exception occured while trying to open race page:', e)
+        print('scrape_race_information: Exception occured while trying to open race page:', e)
         return pd.Series([np.NaN]*12)
 
     #scrape data
@@ -237,7 +237,7 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
         # get list items
         stage_list_items=left_div.find_all("li")
     except Exception as e:
-        print('Exception occured while trying to open race page:', e)
+        print('scrape_stage_race_names_urls: Exception occured while trying to open race page:', e)
         return pd.DataFrame([np.NaN] * 2).T
 
     # prepare data frame
@@ -248,13 +248,13 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
     for list_item in stage_list_items:
         pattern = r'[0-9]'
         test = re.sub(pattern, '',list_item.text)
-    try:
-        if  test!= '/Restday': series=parse_stage_list_item(list_item) # not a rest day
-        else: series=pd.Series({"stage_name":"REST DAY"}) # is a rest day
-        series= pd.DataFrame(series).T
-        df= pd.concat([df,series],ignore_index=True)
-    except:
-        return pd.DataFrame([np.NaN] * 2).T
+        try:
+            if  test!= '/Restday': series=parse_stage_list_item(list_item) # not a rest day
+            else: series=pd.Series({"stage_name":"REST DAY"}) # is a rest day
+            series= pd.DataFrame(series).T
+            df= pd.concat([df,series],ignore_index=True)
+        except:
+            return pd.DataFrame([np.NaN] * 2).T
 
     df =df[(df["stage_name"] != "REST DAY") & (df["TTT"] != True)]
     df.drop("TTT", axis=1, inplace=True)
@@ -358,11 +358,15 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
         infos = soup.find('w30 right mg_rp10')
         # isolate desired table
         table=soup.find("table")
-        if (table is None): return None # results don't exist
+        if (table is None):
+            print('scrape_stage_race_stage_results:Table is None', url)
+            return None # results don't exist
 
         results_table=table.find("tbody")
         rows=results_table.find_all("tr")
-    except: return None
+    except Exception as e:
+        print('scrape_stage_race_names_urls: Exception occured while trying to open race page', e)
+        return None
 
     # prepare data frame
     df=pd.DataFrame(columns=["stage_pos","gc_pos","rider_age","team_name","rider_name",
@@ -372,7 +376,9 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
     for row in rows:
         try:
             series=pd.DataFrame(parse_stage_race_stage_results_row(row)).T
-        except: continue
+        except Exception as e:
+            print('Exception occured while parsing stageraceresultsrow', e)
+            continue
         df=pd.concat([df,series],ignore_index=True)
 
     return df
@@ -482,14 +488,17 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
 
         results_table=table.find("tbody")
         rows=results_table.find_all("tr")
-    except: return None
+    except:
+        print('scrape_one_day_resuts: table is None', url)
+        return None
     # prepare data frame
     df=pd.DataFrame(columns=["finish_pos","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points", "striked"])
 
     # get race information
     try:
         race_inf = scrape_race_information(url)
-    except: return None
+    except:
+        return None
     # fill data frame
     for row in rows:
         try:
