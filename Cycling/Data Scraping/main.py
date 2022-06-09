@@ -23,6 +23,7 @@ def main(years):
     global stage_dict
 
     rider_detail_dict = {}
+    # extract rider_detail_dict from .csv file
     try:
         with open('Test-Data/riderdetaildicts/dict.csv', newline= '') as file:
             reader = csv.reader(file)
@@ -62,69 +63,70 @@ def main(years):
 
             # scrape information and final result of each stage in a stage race
             if stage_race:
-
                 try:
-                    stage_results = scrape_stage_race_all_stage_results(url+'/overview')
-                except:
-                    continue
+                    try:
+                        stage_results = scrape_stage_race_all_stage_results(url+'/overview')
+                    except:
+                        continue
 
-                # add race info to each performance point and concat all stage dataframes
-                for i in range(len(stage_results)):
+                    # add race info to each performance point and concat all stage dataframes
+                    for i in range(len(stage_results)):
 
-                    df_stages, df_oneday, stats_per_season_df = prepare_dataframes()
+                        df_stages, df_oneday, stats_per_season_df = prepare_dataframes()
 
-                    stage_result = stage_results[i]
-                    if stage_result is None: continue
+                        stage_result = stage_results[i]
+                        if stage_result is None: continue
 
-                    race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
-                    out_df = pd.concat([stage_result, race_inf], axis=1)
+                        race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
+                        out_df = pd.concat([stage_result, race_inf], axis=1)
 
-                    # append stage data to final output
-                    df_stages = pd.concat([df_stages, out_df], axis=0)
-                    # get rider details and stats per season
-                    df_stages, stats_per_season_df = details_sps(df_stages, stats_per_season_df)
-                    df_stages.columns = ['stage_pos', 'gc_pos', 'rider_age', 'team_name', 'rider_name',
-                                         'rider_nationality_code', 'uci_points', 'points', 'striked', 'stage_name',
-                                         'date', 'race_name', 'race_class', 'race_ranking', 'race_country_code',
-                                         'start_location', 'end_location', 'pcs_points_scale', 'profile', 'distance',
-                                         'vertical_meters', 'startlist_quality_score', 'stage_race', 'tour',
-                                         'tour_code',
-                                         "DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
-                                         "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking"]
-                    df_stages.to_csv('Test-Data/Stageraces/{}_{}_stage{}.csv'.format(df_stages.iloc[0]['race_name'], year,1), index=True)
+                        # append stage data to final output
+                        df_stages = pd.concat([df_stages, out_df], axis=0)
+                        # get rider details and stats per season
+                        df_stages, stats_per_season_df = details_sps(df_stages, stats_per_season_df)
+                        df_stages.columns = ['stage_pos', 'gc_pos', 'rider_age', 'team_name', 'rider_name',
+                                             'rider_nationality_code', 'uci_points', 'points', 'striked', 'stage_name',
+                                             'date', 'race_name', 'race_class', 'race_ranking', 'race_country_code',
+                                             'start_location', 'end_location', 'pcs_points_scale', 'profile', 'distance',
+                                             'vertical_meters', 'startlist_quality_score', 'stage_race', 'tour',
+                                             'tour_code',
+                                             "DoB", "weight", "height", "one_day_points", "GC_points", "tt_points",
+                                             "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking"]
+                        df_stages.to_csv('Test-Data/Stageraces/{}_{}_stage{}.csv'.format(df_stages.iloc[0]['race_name'], year,i), index=True)
 
-                    exportdict(df_stages.iloc[0]['race_name'], year)
-                    rider_detail_dict.update(stage_dict)
-                    stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}.csv'.format(df_stages.iloc[0]['race_name'], year), index=True)
-
+                        exportdict(df_stages.iloc[0]['race_name'], year)
+                        rider_detail_dict.update(stage_dict)
+                        stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}_stage{}.csv'.format(df_stages.iloc[0]['race_name'], year, i), index=True)
+                except: continue
             # scrape information and final result of a one-day race
             else:
                 try:
-                    stage_result = scrape_one_day_results(url)
-                except:
-                    continue
-                if stage_result is None: continue
-                race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
-                out_df = pd.concat([stage_result, race_inf], axis=1)
+                    try:
+                        stage_result = scrape_one_day_results(url)
+                    except:
+                        continue
+                    if stage_result is None: continue
+                    race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
+                    out_df = pd.concat([stage_result, race_inf], axis=1)
 
-                df_oneday = pd.concat([df_oneday, out_df], axis= 0)
-                df_oneday, stats_per_season_df = details_sps(df_oneday, stats_per_season_df)
+                    df_oneday = pd.concat([df_oneday, out_df], axis= 0)
+                    df_oneday, stats_per_season_df = details_sps(df_oneday, stats_per_season_df)
 
-                df_oneday.columns = ['finish_pos', 'rider_age', 'team_name', 'rider_name', 'rider_nationality_code',
-                                     'uci_points', 'points',
-                                     'striked', 'date', 'race_name', 'race_class', 'race_ranking', 'race_country_code',
-                                     'start_location',
-                                     'end_location', 'pcs_points_scale', 'profile', 'distance', 'vertical_meters',
-                                     'startlist_quality_score',
-                                     'stage_race', 'tour', 'tour_code', "DoB", "weight", "height", "one_day_points",
-                                     "GC_points", "tt_points",
-                                     "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking"]
-                df_oneday.to_csv('Test-Data/onedayraces/{}_{}.csv'.format(df_oneday.iloc[0]['race_name'], year), index=True)
+                    df_oneday.columns = ['finish_pos', 'rider_age', 'team_name', 'rider_name', 'rider_nationality_code',
+                                         'uci_points', 'points',
+                                         'striked', 'date', 'race_name', 'race_class', 'race_ranking', 'race_country_code',
+                                         'start_location',
+                                         'end_location', 'pcs_points_scale', 'profile', 'distance', 'vertical_meters',
+                                         'startlist_quality_score',
+                                         'stage_race', 'tour', 'tour_code', "DoB", "weight", "height", "one_day_points",
+                                         "GC_points", "tt_points",
+                                         "sprint_points", "climbing_points", "uci_world_ranking", "all_time_ranking"]
+                    df_oneday.to_csv('Test-Data/onedayraces/{}_{}.csv'.format(df_oneday.iloc[0]['race_name'], year), index=True)
 
-                exportdict( df_oneday.iloc[0]['race_name'], year)
-                rider_detail_dict.update(stage_dict)
-                stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}.csv'.format(df_oneday.iloc[0]['race_name'], year), index=True)
-
+                    exportdict( df_oneday.iloc[0]['race_name'], year)
+                    rider_detail_dict.update(stage_dict)
+                    stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}.csv'.format(df_oneday.iloc[0]['race_name'], year), index=True)
+                except: continue
 
     # print total runtime
     end_time = time.time()

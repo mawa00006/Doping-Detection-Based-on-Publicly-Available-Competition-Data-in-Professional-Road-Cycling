@@ -163,20 +163,24 @@ def scrape_race_information(url:str):
                     "startlist_quality-score" (int) quality of startlist
 
     """
-    # start session
-    session = HTMLSession()
-    response = session.get(url)
-    response.html.render()
-    soup = BeautifulSoup(response.html.html, "lxml")
+    try:
+        # start session
+        session = HTMLSession()
+        response = session.get(url)
+        response.html.render()
+        soup = BeautifulSoup(response.html.html, "lxml")
 
-    #series to fill in
-    series = pd.Series(dtype= 'object')
+        #series to fill in
+        series = pd.Series(dtype= 'object')
 
-    #isolate main info
-    main = soup.find("div",{"class":"main"})
+        #isolate main info
+        main = soup.find("div",{"class":"main"})
 
-    # isolate race information table
-    infolist = soup.find("ul", {"class": "infolist"}).find_all("div")
+        # isolate race information table
+        infolist = soup.find("ul", {"class": "infolist"}).find_all("div")
+    except Exception as e:
+        print('Exception occured while trying to open race page:', e)
+        return pd.Series([np.NaN]*12)
 
     #scrape data
     try: series["date"] = datetime.strptime(infolist[1].text, '%d %B %Y').date()
@@ -219,18 +223,22 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
                         "stage_name" (str) name of stage (`stage #` or `REST DAY`)
                         "stage_url" (str) full url to stage's detail page
     """
-    # fetch data
-    session=HTMLSession()
-    response=session.get(url)
-    response.html.render()
-    soup=BeautifulSoup(response.html.html,"lxml")
+    try:
+        # fetch data
+        session=HTMLSession()
+        response=session.get(url)
+        response.html.render()
+        soup=BeautifulSoup(response.html.html,"lxml")
 
-    # isolate desired list
-    left_div=soup.find_all("div",{"class":"mt20"})[1]
-    stage_list=left_div.find_all("ul")
+        # isolate desired list
+        left_div=soup.find_all("div",{"class":"mt20"})[1]
+        stage_list=left_div.find_all("ul")
 
-    # get list items
-    stage_list_items=left_div.find_all("li")
+        # get list items
+        stage_list_items=left_div.find_all("li")
+    except Exception as e:
+        print('Exception occured while trying to open race page:', e)
+        return pd.DataFrame([np.NaN] * 2).T
 
     # prepare data frame
     df=pd.DataFrame(columns=["stage_name","stage_url", "TTT"])
@@ -240,12 +248,13 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
     for list_item in stage_list_items:
         pattern = r'[0-9]'
         test = re.sub(pattern, '',list_item.text)
-
+    try:
         if  test!= '/Restday': series=parse_stage_list_item(list_item) # not a rest day
         else: series=pd.Series({"stage_name":"REST DAY"}) # is a rest day
         series= pd.DataFrame(series).T
         df= pd.concat([df,series],ignore_index=True)
-
+    except:
+        return pd.DataFrame([np.NaN] * 2).T
 
     df =df[(df["stage_name"] != "REST DAY") & (df["TTT"] != True)]
     df.drop("TTT", axis=1, inplace=True)
@@ -308,8 +317,10 @@ def scrape_stage_race_all_stage_results(url:str) -> [pd.DataFrame]:
         stage_url = stage[2]
         if stage_url[:4]!="http": stage_url="https://"+stage_url
         print(stage_url)
-        stage_results_df=scrape_stage_race_stage_results(stage_url)
-        info_df = pd.DataFrame(scrape_race_information(stage_url)).T
+        try:stage_results_df=scrape_stage_race_stage_results(stage_url)
+        except:continue
+        try:info_df = pd.DataFrame(scrape_race_information(stage_url)).T
+        except: continue
         info_df.insert(0, "stage_name", stage[1])
         info_df = pd.concat([info_df]*stage_results_df.shape[0], ignore_index= True)
         stage_results_df = pd.concat([stage_results_df, info_df], axis= 1)
@@ -338,18 +349,20 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
                         "points" (int) number of PCS points won by rider in stage
                         "striked" (int) result was stripped (doping?)
     """
-    # start session
-    session=HTMLSession()
-    response=session.get(url)
-    response.html.render()
-    soup=BeautifulSoup(response.html.html,"lxml")
-    infos = soup.find('w30 right mg_rp10')
-    # isolate desired table
-    table=soup.find("table")
-    if (table is None): return None # results don't exist
+    try:
+        # start session
+        session=HTMLSession()
+        response=session.get(url)
+        response.html.render()
+        soup=BeautifulSoup(response.html.html,"lxml")
+        infos = soup.find('w30 right mg_rp10')
+        # isolate desired table
+        table=soup.find("table")
+        if (table is None): return None # results don't exist
 
-    results_table=table.find("tbody")
-    rows=results_table.find_all("tr")
+        results_table=table.find("tbody")
+        rows=results_table.find_all("tr")
+    except: return None
 
     # prepare data frame
     df=pd.DataFrame(columns=["stage_pos","gc_pos","rider_age","team_name","rider_name",
@@ -357,7 +370,9 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
 
     # fill data frame
     for row in rows:
-        series=pd.DataFrame(parse_stage_race_stage_results_row(row)).T
+        try:
+            series=pd.DataFrame(parse_stage_race_stage_results_row(row)).T
+        except: continue
         df=pd.concat([df,series],ignore_index=True)
 
     return df
@@ -453,28 +468,33 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
                         "vertical_meters" (int) vertically climbed distance of stage in km
                         "startlist_quality-score" (int) quality of startlist
     """
-    # start session
-    session=HTMLSession()
-    response=session.get(url)
-    response.html.render()
-    soup=BeautifulSoup(response.html.html,"lxml")
-    print(url)
+    try:
+        # start session
+        session=HTMLSession()
+        response=session.get(url)
+        response.html.render()
+        soup=BeautifulSoup(response.html.html,"lxml")
+        print(url)
 
-    # isolate desired table
-    table=soup.find("table")
-    if (table is None): return None # results don't exist
+        # isolate desired table
+        table=soup.find("table")
+        if (table is None): return None # results don't exist
 
-    results_table=table.find("tbody")
-    rows=results_table.find_all("tr")
-
+        results_table=table.find("tbody")
+        rows=results_table.find_all("tr")
+    except: return None
     # prepare data frame
     df=pd.DataFrame(columns=["finish_pos","rider_age","team_name","rider_name","rider_nationality_code","uci_points","points", "striked"])
 
     # get race information
-    race_inf = scrape_race_information(url)
+    try:
+        race_inf = scrape_race_information(url)
+    except: return None
     # fill data frame
     for row in rows:
-        series=parse_one_day_results_row(row)
+        try:
+            series=parse_one_day_results_row(row)
+        except: continue
         series = pd.DataFrame(pd.concat([race_inf, series], axis=0)).T
         df=pd.concat([df,series],axis =0,ignore_index=True)
 
@@ -545,21 +565,20 @@ def scrape_rider_details(url:str):
                     "uci_world_ranking" (int)  current UCI world ranking
                     "all_time_ranking" (int) all time UCI ranking
     """
+    try:
+        # start session
+        session = HTMLSession()
+        response = session.get(url)
+        response.html.render()
+        soup = BeautifulSoup(response.html.html, "lxml")
 
-    # start session
-    session = HTMLSession()
-    response = session.get(url)
-    response.html.render()
-    soup = BeautifulSoup(response.html.html, "lxml")
+        series = pd.Series(dtype= 'object')
 
-    series = pd.Series(dtype= 'object')
-
-    div = soup.find("div",{"class":"rdr-info-cont"})
-    span = div.find_all("span")
-    pps = div.find_all("div", {"class":"pnt"})
-    rnk = div.find_all("div",{"class": "rnk"} )
-
-    # date of birth
+        div = soup.find("div",{"class":"rdr-info-cont"})
+        span = div.find_all("span")
+        pps = div.find_all("div", {"class":"pnt"})
+        rnk = div.find_all("div",{"class": "rnk"} )
+    except:pd.DataFrame([np.NaN]*10).T    # date of birth
     try:
         d = div.contents[1]
         m = div.contents[3].split(" ")[1]
@@ -612,22 +631,24 @@ def scrape_stats_per_season(url:str, rider_name):
                 "wins" (int) wins in a given season
                 "racedays" (int) racedays in a given season
     """
+    try:
+        # start session
+        session = HTMLSession()
+        response = session.get(url)
+        response.html.render()
+        soup = BeautifulSoup(response.html.html, "lxml")
 
-    # start session
-    session = HTMLSession()
-    response = session.get(url)
-    response.html.render()
-    soup = BeautifulSoup(response.html.html, "lxml")
+        # prepare df
+        sps_df = pd.DataFrame(columns=["season", "points", "wins", "racedays"])
 
-    # prepare df
-    sps_df = pd.DataFrame(columns=["season", "points", "wins", "racedays"])
-
-    # get table
-    table = soup.find("div", {"class":"mt10"}).find("tbody")
-    rows = table.find_all("tr")
-
+        # get table
+        table = soup.find("div", {"class":"mt10"}).find("tbody")
+        rows = table.find_all("tr")
+    except: return pd.DataFrame([np.NaN]*4).T
     for row in rows:
-        df = pd.DataFrame(parse_stats_per_season_row(row)).T
+        try:
+            df = pd.DataFrame(parse_stats_per_season_row(row)).T
+        except: continue
         df.insert(0, "name", rider_name)
         sps_df = pd.concat([sps_df,df ], axis= 0, ignore_index= True)
 
@@ -651,10 +672,14 @@ def parse_stats_per_season_row(row):
 
     row= row.find_all("td")
 
-    series["season"] = row[0].text
-    series["points"] = row[1].text
-    series["wins"] = row[4].text
-    series["racedays"] = row[5].text
+    try:series["season"] = row[0].text
+    except: series["season"] = np.NaN
+    try:series["points"] = row[1].text
+    except: series["points"] = np.NaN
+    try:series["wins"] = row[4].text
+    except: series["wins"] = np.NaN
+    try:series["racedays"] = row[5].text
+    except: series["racedays"] = np.NaN
 
     return series
 
