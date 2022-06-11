@@ -27,7 +27,7 @@ def main(years):
     rider_detail_dict = {}
     # extract rider_detail_dict from .csv file
     try:
-        with open('Test-Data/riderdetaildicts/dict.csv', newline= '') as file:
+        with open('Test-Data/riderdetaildicts/dict.csv', newline='') as file:
             reader = csv.reader(file)
             next(reader)
             for rows in reader:
@@ -120,7 +120,9 @@ def main(years):
                     except Exception as e:
                         print('Exception occured while scraping onedayresults', e, getattr(race_info_df, 'stage_url'))
                         continue
-                    if stage_result is None: continue
+                    if stage_result is None:
+                        print('odr: race is none', url)
+                        continue
                     race_inf = pd.concat([race_info_df] * stage_result.shape[0], ignore_index=True)
                     out_df = pd.concat([stage_result, race_inf], axis=1)
 
@@ -140,8 +142,11 @@ def main(years):
 
                     exportdict( df_oneday.iloc[0]['race_name'], year)
                     rider_detail_dict.update(stage_dict)
+
                     stats_per_season_df.to_csv('Test-Data/sps/sps_{}_{}.csv'.format(df_oneday.iloc[0]['race_name'], year), index=True)
-                except: continue
+                except Exception as e:
+                    print('Exception while merging table in onedayresults:', e)
+                    continue
 
     # print total runtime
     end_time = time.time()
@@ -166,12 +171,12 @@ def details_sps( df, stats_per_season_df):
         rider = getattr(stage_performance, "rider_name")
 
         if rider in rider_detail_dict:
-            #print(rider, 'in dict')
+            print(rider, 'in dict')
             details = rider_detail_dict[rider]
             rider_detail_df = pd.concat([rider_detail_df, details], axis=0, ignore_index=True)
 
         else:
-            #print(rider)
+            print(rider)
             try: details = scrape_rider_details('https://www.procyclingstats.com/rider/{}'.format(rider))
             except: details = pd.DataFrame([np.NaN]*10).T
             stage_dict[rider] = details
@@ -255,7 +260,7 @@ if __name__ == "__main__":
             if file.endswith('.csv'):
                 try: tmp = pd.read_csv(os.path.join("Test-Data/sps/", file))
                 except: continue
-                tmp.to_csv('Test-Data/onedayraces/final_sps.csv', mode = 'a')
+                tmp.to_csv('Test-Data/sps/final_sps.csv', mode = 'a')
 
     for file in os.listdir("Test-Data/Stageraces/"):
             if file.endswith('.csv'):
