@@ -100,6 +100,10 @@ def merge_sps(df):
     return df
 
 def advr_names():
+    '''
+    format the 'PERSON' column so that names match the format of the name
+    in the url used by PCS and the other dataframes
+    '''
     advr = pd.read_csv('Data/ADRV.csv')
 
     urls = advr['URL']
@@ -118,6 +122,10 @@ def advr_names():
 
 
 def label_advr(df):
+    '''
+    Add doping status to each rider performance using anti-doping-rule-violation data
+    extracted from wikipedia
+    '''
 
     advr = pd.read_csv('Data/ADVR_renamed')
 
@@ -141,12 +149,14 @@ def label_advr(df):
 
 
 
-#rank_normalization()
-#merged = merge_normed_races()
-#merged_sps = merge_sps(merged)
+#normalize ranks
+rank_normalization()
 
+#merge oneday races and stage races
+merged = merge_normed_races()
 
+#merge sps
+merged_sps = merge_sps(merged)
 
-pd.read_csv('Data/merged_sps.csv')
-
-label_advr(pd.read_csv('Data/merged_sps.csv'))
+#add doping lable
+label_advr(merged_sps)
