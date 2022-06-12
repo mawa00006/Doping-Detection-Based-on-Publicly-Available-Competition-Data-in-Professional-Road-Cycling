@@ -117,14 +117,25 @@ def advr_names():
     return
 
 
-def merge_advr(df):
+def label_advr(df):
 
-    advr = pd.read_csv('Data/ADRV.csv')
-    test = advr['URL']
+    advr = pd.read_csv('Data/ADVR_renamed')
 
+    labels=np.array([0]*df.shape[0])
+    i= 0
     for perf in df.itertuples():
-        pass
+        name = getattr(perf, 'rider_name')
 
+        if (advr[advr['rider_name'] == name].shape[0] != 0):
+            labels[i] = 1
+        else:
+            pass
+
+    label_df =pd.DataFrame(labels, columns=['doped'])
+
+    df =pd.concat([df, label_df], axis= 1)
+
+    df.to_csv('Data/labeled_data.csv')
 
     return
 
@@ -134,8 +145,8 @@ def merge_advr(df):
 #merged = merge_normed_races()
 #merged_sps = merge_sps(merged)
 
-advr_names()
+
 
 pd.read_csv('Data/merged_sps.csv')
 
-merge_advr(pd.read_csv('Data/merged_sps.csv'))
+label_advr(pd.read_csv('Data/merged_sps.csv'))
