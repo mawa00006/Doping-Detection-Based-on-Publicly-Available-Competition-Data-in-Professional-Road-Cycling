@@ -99,10 +99,43 @@ def merge_sps(df):
     df.to_csv('Data/merged_sps.csv')
     return df
 
+def advr_names():
+    advr = pd.read_csv('Data/ADRV.csv')
+
+    urls = advr['URL']
+    for i in range(advr.shape[0]):
+
+        urls[i] = urls[i].split('/')[4]
+
+    names = pd.DataFrame(urls)
+    names.rename(columns={'URL': 'rider_name'}, inplace= True)
+    advr = pd.concat([names, advr], axis= 1)
+    advr.drop(columns=['PERSON', 'ARG2', 'URL', 'event'], inplace= True)
+
+    advr.to_csv('Data/ADVR_renamed')
+
+    return
 
 
-rank_normalization()
-merged = merge_normed_races()
-merged_sps = merge_sps(merged)
+def merge_advr(df):
+
+    advr = pd.read_csv('Data/ADRV.csv')
+    test = advr['URL']
+
+    for perf in df.itertuples():
+        pass
 
 
+    return
+
+
+
+#rank_normalization()
+#merged = merge_normed_races()
+#merged_sps = merge_sps(merged)
+
+advr_names()
+
+pd.read_csv('Data/merged_sps.csv')
+
+merge_advr(pd.read_csv('Data/merged_sps.csv'))
