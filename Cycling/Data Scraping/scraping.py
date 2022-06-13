@@ -692,3 +692,135 @@ def parse_stats_per_season_row(row):
 
     return series
 
+
+def scrape_dopeology_incidents():
+    '''
+    SUMMARY
+    Scrape all incidents from dopeology.com
+    PARAMETERS
+    no parameters
+    OUTPUT
+    pd.Dataframe: fetched data includes:
+                "incident_name" (str) name of incident
+                "incident_url" (str) url to incident overview page
+                "incident_type" (str) type of incident
+                "incident_date" () date of incident
+    '''
+
+    first_page_url= 'https://www.dopeology.org/incidents/'
+
+    number_incidents =1314
+
+    url = 'https://www.dopeology.org/incidents/list/by:default|order:desc|batch:{}|filter:|page:1/'.format(number_incidents)
+
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
+
+    div = soup.find("table", {"class": "highlight"})
+    rows = div.find_all("tr")[1:]
+
+    df = pd.DataFrame(columns=['incident_name', 'incident_url', 'incident_type', 'incident_date'])
+
+    for row in rows:
+        incident = parse_incident_table_row(row)
+        df = pd.concat([df, incident], axis=0)
+
+    return df
+
+def scrape_incident_number():
+    '''
+    SUMMARY
+    Scrape number of incidents recorded on dopeology.com
+    PARAMETERS
+    none
+    OUTPUT
+    "number_incidents" (str) number of incidents recorded on dopeology
+    '''
+
+    url = 'https://www.dopeology.org/incidents/'
+
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
+
+    number_incidents = soup.find("span",{"class":"total"}).text
+
+    return number_incidents
+
+def parse_incident_table_row(row):
+    '''
+    SUMMARY
+    Parse one row of the incident table scraped by scrape_dopeology_incidents. One row contains one incident
+    PARAMETERS
+    one row of the incident table
+    OUTPUT
+    pd.Dataframe: fetched data includes
+                "incident_name" (str) name of incident
+                "incident_url" (str) url to incident overview page
+                "incident_type" (str) type of incident
+                "incident_date" () date of incident
+    '''
+
+    series = pd.Series(dtype= 'object')
+
+    series['incident_name']= row.contents[1].text
+    series['incident_url'] = 'https://www.dopeology.org{}'.format(row.contents[1].find("a").attrs['href'])
+    series['incident_type'] = row.contents[2].text
+    series['incident_date'] = row.contents[3].text
+
+    return pd.DataFrame(series).T
+
+
+def scrape_incident(url):
+    '''
+    SUMMARY
+    Scrape all information from an incident page
+    PARAMETERS
+    url of an incident page
+    E.G. https://www.dopeology.org/incidents/Operação-Prova-Limpa/
+    OUTPUT
+    pd.Dataframe: fetched data includes multiple rows of
+                "name" (str) name of associated person
+                "team" (str) team of associated person
+                "role" (str) role of person (e.g. Rider, Coach, Doctor)
+                "product" (str) used product
+    '''
+    # start session
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    soup = BeautifulSoup(response.html.html, "lxml")
+
+    try:
+        table = soup.find("ul", {"class":"highlight-nested"})
+
+        team = table.find("a").text
+    except:
+        print('No information about associated people')
+        return None
+
+    #product = soup.find("ul", {"id":"list-products"}).text
+
+    df = pd.DataFrame(columns=['name', 'team', 'role'])
+
+    rows = table.find("ul"). find_all("li")
+
+    for row in rows:
+
+        series = pd.Series(dtype= 'object')
+
+        series['name'] = '{}-{}'.format(row.contents[0].contents[0].text,row.contents[0].contents[1])
+        series['team'] = team
+        series['role'] = row.contents[2].text
+        #series['product'] = product
+        row_df = pd.DataFrame(series).T
+        df = pd.concat([df, row_df], axis = 0)
+
+    return df
+
+
