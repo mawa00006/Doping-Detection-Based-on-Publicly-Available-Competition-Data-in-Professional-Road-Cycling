@@ -116,7 +116,7 @@ def advr_names():
     advr = pd.concat([names, advr], axis= 1)
     advr.drop(columns=['PERSON', 'ARG2', 'URL', 'event'], inplace= True)
 
-    advr.to_csv('Data/ADVR_renamed')
+    advr.to_csv('Data/ADVR_renamed.csv')
 
     return
 
@@ -127,7 +127,7 @@ def label_advr(df):
     extracted from wikipedia
     '''
 
-    advr = pd.read_csv('Data/ADVR_renamed')
+    advr = pd.read_csv('Data/ADVR_renamed.csv')
 
     labels=np.array([0]*df.shape[0])
     i= 0
