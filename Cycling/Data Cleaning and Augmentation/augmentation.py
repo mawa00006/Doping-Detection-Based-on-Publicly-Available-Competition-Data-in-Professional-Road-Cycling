@@ -27,9 +27,12 @@ def rank_normalization():
                 try:
                     tmp = pd.read_csv(os.path.join("Data/Stageraces/", file))
                     #normalize stage position
-                    tmp['stage_pos'] = (tmp['stage_pos']-1) / (tmp.shape[0]-1)
+                    tmp['stage_pos'] =(1- (tmp['stage_pos']-1) / (tmp.shape[0]-1))*np.exp(-0.025*(tmp['stage_pos']-1))
                     # normalize general classification position
-                    tmp['gc_pos'] = (tmp['gc_pos']- 1) / (tmp.shape[0]-1)
+                    tmp['gc_pos'] =(1-  (tmp['gc_pos']- 1) / (tmp.shape[0]-1))*np.exp(-0.025*(tmp['stage_pos']-1))
+
+                    #(1-(pos-1)/part-1)) * exp(-0,025 * (pos-1))
+
 
                 except: continue
 
@@ -150,13 +153,17 @@ def label_advr(df):
 
 
 #normalize ranks
+print('normalizing')
 rank_normalization()
 
 #merge oneday races and stage races
+print('merging')
 merged = merge_normed_races()
 
 #merge sps
+print('sps')
 merged_sps = merge_sps(merged)
 
 #add doping lable
+print('labeling')
 label_advr(merged_sps)
