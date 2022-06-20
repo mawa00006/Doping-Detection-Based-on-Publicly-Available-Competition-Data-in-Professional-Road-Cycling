@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession # to remove
+import nest_asyncio
 import pandas as pd
 import numpy as np
 import re
@@ -54,11 +55,12 @@ def get_available_tours_for_year(year=2020) -> {str:int}:
     # format url
     url="https://www.procyclingstats.com/races.php?year={}".format(year)
 
-    # fetch data
-    session=HTMLSession()
-    response=session.get(url)
-    response.html.render()
-    soup=BeautifulSoup(response.html.html,"lxml")
+    # start session
+    nest_asyncio.apply()
+    session = HTMLSession()
+    response = session.get(url)
+    soup = BeautifulSoup(response.html.html, "lxml")
+    session.close()
 
     # isolate input field
     select_field=soup.find("select",{"name":"circuit"})
@@ -94,11 +96,12 @@ def scrape_tour_races_for_year(year=2020,tour_code=1) -> pd.DataFrame:
     # format url
     url="https://www.procyclingstats.com/races.php?year={}&circuit={}".format(year,tour_code)
 
-    # fetch data
-    session=HTMLSession()
-    response=session.get(url)
-    response.html.render()
-    soup=BeautifulSoup(response.html.html,"lxml")
+    # start session
+    nest_asyncio.apply()
+    session = HTMLSession()
+    response = session.get(url)
+    soup = BeautifulSoup(response.html.html, "lxml")
+    session.close()
 
     table_div=soup.find("table",{"class":"basic"})
     table_body=table_div.find("tbody")
@@ -165,10 +168,11 @@ def scrape_race_information(url:str):
     """
     try:
         # start session
+        nest_asyncio.apply()
         session = HTMLSession()
         response = session.get(url)
-        response.html.render()
         soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
 
         #series to fill in
         series = pd.Series(dtype= 'object')
@@ -224,11 +228,12 @@ def scrape_stage_race_names_urls(url:str) -> pd.DataFrame:
                         "stage_url" (str) full url to stage's detail page
     """
     try:
-        # fetch data
-        session=HTMLSession()
-        response=session.get(url)
-        response.html.render()
-        soup=BeautifulSoup(response.html.html,"lxml")
+        # start session
+        nest_asyncio.apply()
+        session = HTMLSession()
+        response = session.get(url)
+        soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
 
         # isolate desired list
         left_div=soup.find_all("div",{"class":"mt20"})[1]
@@ -351,11 +356,15 @@ def scrape_stage_race_stage_results(url:str) -> pd.DataFrame:
     """
     try:
         # start session
-        session=HTMLSession()
-        response=session.get(url)
-        response.html.render()
-        soup=BeautifulSoup(response.html.html,"lxml")
+        nest_asyncio.apply()
+        session = HTMLSession()
+        response = session.get(url)
+        soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
+
         infos = soup.find('w30 right mg_rp10')
+        session.close()
+
         # isolate desired table
         table=soup.find("table")
         if (table is None):
@@ -476,10 +485,11 @@ def scrape_one_day_results(url:str) -> pd.DataFrame:
     """
     try:
         # start session
-        session=HTMLSession()
-        response=session.get(url)
-        response.html.render()
-        soup=BeautifulSoup(response.html.html,"lxml")
+        nest_asyncio.apply()
+        session = HTMLSession()
+        response = session.get(url)
+        soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
         print(url)
 
         # isolate desired table
@@ -576,10 +586,11 @@ def scrape_rider_details(url:str):
     """
     try:
         # start session
+        nest_asyncio.apply()
         session = HTMLSession()
         response = session.get(url)
-        response.html.render()
         soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
 
         series = pd.Series(dtype= 'object')
 
@@ -642,10 +653,11 @@ def scrape_stats_per_season(url:str, rider_name):
     """
     try:
         # start session
+        nest_asyncio.apply()
         session = HTMLSession()
         response = session.get(url)
-        response.html.render()
         soup = BeautifulSoup(response.html.html, "lxml")
+        session.close()
 
         # prepare df
         sps_df = pd.DataFrame(columns=["season", "points", "wins", "racedays"])
@@ -693,6 +705,8 @@ def parse_stats_per_season_row(row):
     return series
 
 
+
+
 def scrape_dopeology_incidents():
     '''
     SUMMARY
@@ -709,15 +723,16 @@ def scrape_dopeology_incidents():
 
     first_page_url= 'https://www.dopeology.org/incidents/'
 
-    number_incidents =1314
+    number_incidents =scrape_incident_number()
 
     url = 'https://www.dopeology.org/incidents/list/by:default|order:desc|batch:{}|filter:|page:1/'.format(number_incidents)
 
     # start session
+    nest_asyncio.apply()
     session = HTMLSession()
     response = session.get(url)
-    response.html.render()
     soup = BeautifulSoup(response.html.html, "lxml")
+    session.close()
 
     div = soup.find("table", {"class": "highlight"})
     rows = div.find_all("tr")[1:]
@@ -742,13 +757,15 @@ def scrape_incident_number():
 
     url = 'https://www.dopeology.org/incidents/'
 
+
     # start session
+    nest_asyncio.apply()
     session = HTMLSession()
     response = session.get(url)
-    response.html.render()
     soup = BeautifulSoup(response.html.html, "lxml")
+    session.close()
 
-    number_incidents = soup.find("span",{"class":"total"}).text
+    number_incidents = int(soup.find("span",{"class":"total"}).text.split(" ")[1])
 
     return number_incidents
 
@@ -793,8 +810,8 @@ def scrape_incident(url):
     # start session
     session = HTMLSession()
     response = session.get(url)
-    response.html.render()
     soup = BeautifulSoup(response.html.html, "lxml")
+    session.close()
 
     try:
         table = soup.find("ul", {"class":"highlight-nested"})
