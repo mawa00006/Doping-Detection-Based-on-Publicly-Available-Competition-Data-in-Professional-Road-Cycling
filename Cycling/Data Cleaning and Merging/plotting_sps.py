@@ -80,7 +80,7 @@ def plot(name):
   # Show plot
 
   plt.show()
-
+prepare_dataframes()
 plot('wins')
 plot('points')
 plot('racedays')

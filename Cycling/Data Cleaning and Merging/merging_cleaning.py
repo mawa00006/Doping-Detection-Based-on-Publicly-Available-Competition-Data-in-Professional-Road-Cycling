@@ -112,14 +112,14 @@ def advr_names():
     urls = advr['URL']
     for i in range(advr.shape[0]):
 
-        urls[i] = urls[i].split('/')[4]
+        urls[i] = urls[i].split('/')[4].lower()
 
     names = pd.DataFrame(urls)
     names.rename(columns={'URL': 'rider_name'}, inplace= True)
     advr = pd.concat([names, advr], axis= 1)
     advr.drop(columns=['PERSON', 'ARG2', 'URL', 'event'], inplace= True)
 
-    advr.to_csv('Data/ADVR_renamed.csv')
+    advr.to_csv('Data/ADVR_renamed.csv', index= False)
 
     return
 
@@ -130,26 +130,47 @@ def label_advr(df):
     extracted from wikipedia
     '''
 
-    advr = pd.read_csv('Data/ADVR_renamed.csv')
+    adrv = pd.read_csv('Data/adrv.csv')
+    adrv = adrv["0"].unique()
 
     labels=np.array([0]*df.shape[0])
+    years = np.array([0]*df.shape[0])
     i= 0
     for perf in df.itertuples():
         name = getattr(perf, 'rider_name')
-
-        if (advr[advr['rider_name'] == name].shape[0] != 0):
+        date = getattr(perf, "date")
+        year = date.split('-')[0]
+        years[i] = year
+        if name in adrv:
             labels[i] = 1
-        else:
-            pass
+
+        i += 1
+
 
     label_df =pd.DataFrame(labels, columns=['doped'])
+    year_df = pd.DataFrame(years, columns=['year'])
 
-    df =pd.concat([df, label_df], axis= 1)
-
-    df.to_csv('Data/labeled_data.csv')
+    df =pd.concat([df.reset_index(drop=True), label_df.reset_index(drop=True)], axis= 1)
+    df = pd.concat([df.reset_index(drop=True), year_df.reset_index(drop=True)], axis=1)
+    df.to_csv('Data/labeled_data.csv', index = False)
 
     return
 
+def clean_sps():
+
+    sps = pd.read_csv('Data/final_sps.csv')
+    sps = sps[(sps['name']!= 'name')]
+    sps.drop(columns =['Unnamed: 0.1', 'Unnamed: 0'], inplace=True)
+    sps.drop_duplicates(inplace= True)
+    sps.to_csv('Data/cleaned_sps.csv', index = False)
+
+    return sps
+
+
+df = pd.read_csv('Data/labeled-2.csv')
+df.drop(columns=["Unnamed: 0.1", "Unnamed: 0","doped"], inplace=True)
+df.dropna(subset = ["finish_pos"], inplace = True)
+label_advr(df)
 
 
 #normalize ranks
